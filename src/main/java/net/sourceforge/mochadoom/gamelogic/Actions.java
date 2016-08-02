@@ -1,31 +1,5 @@
 package net.sourceforge.mochadoom.gamelogic;
 
-import net.sourceforge.mochadoom.data.Tables;
-import net.sourceforge.mochadoom.data.mapthing_t;
-import net.sourceforge.mochadoom.data.mobjinfo_t;
-import net.sourceforge.mochadoom.data.mobjtype_t;
-import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
-import net.sourceforge.mochadoom.data.spritenum_t;
-import net.sourceforge.mochadoom.data.state_t;
-import net.sourceforge.mochadoom.data.mobjinfo.BlackZombie_t;
-import net.sourceforge.mochadoom.data.mobjinfo.GrayZombie_t;
-import net.sourceforge.mochadoom.data.mobjinfo.GreenZombie_t;
-import net.sourceforge.mochadoom.data.mobjinfo.RedZombie_t;
-import net.sourceforge.mochadoom.defines.Card;
-import net.sourceforge.mochadoom.defines.Skill;
-import net.sourceforge.mochadoom.defines.SlopeType;
-import net.sourceforge.mochadoom.defines.StateNum;
-import net.sourceforge.mochadoom.doom.DoomStatus;
-import net.sourceforge.mochadoom.doom.player_t;
-import net.sourceforge.mochadoom.doom.think_t;
-import net.sourceforge.mochadoom.doom.thinker_t;
-import net.sourceforge.mochadoom.doom.weapontype_t;
-import net.sourceforge.mochadoom.rendering.line_t;
-import net.sourceforge.mochadoom.rendering.sector_t;
-import net.sourceforge.mochadoom.rendering.side_t;
-import net.sourceforge.mochadoom.rendering.subsector_t;
-import net.sourceforge.mochadoom.utils.C2JUtils;
-
 import static net.sourceforge.mochadoom.data.Defines.BASETHRESHOLD;
 import static net.sourceforge.mochadoom.data.Defines.FLOATSPEED;
 import static net.sourceforge.mochadoom.data.Defines.ITEMQUESIZE;
@@ -68,15 +42,6 @@ import static net.sourceforge.mochadoom.doom.English.PD_REDK;
 import static net.sourceforge.mochadoom.doom.English.PD_REDO;
 import static net.sourceforge.mochadoom.doom.English.PD_YELLOWK;
 import static net.sourceforge.mochadoom.doom.English.PD_YELLOWO;
-import static net.sourceforge.mochadoom.menu.BBox.BOXBOTTOM;
-import static net.sourceforge.mochadoom.menu.BBox.BOXLEFT;
-import static net.sourceforge.mochadoom.menu.BBox.BOXRIGHT;
-import static net.sourceforge.mochadoom.menu.BBox.BOXTOP;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
-import static net.sourceforge.mochadoom.menu.fixed_t.FixedDiv;
-import static net.sourceforge.mochadoom.menu.fixed_t.FixedMul;
-import static net.sourceforge.mochadoom.menu.fixed_t.MAPFRACUNIT;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.DI_EAST;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.DI_NODIR;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.DI_NORTH;
@@ -115,6 +80,15 @@ import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SPAWNCEILING;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SPECIAL;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_TELEPORT;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_TRANSSHIFT;
+import static net.sourceforge.mochadoom.menu.BBox.BOXBOTTOM;
+import static net.sourceforge.mochadoom.menu.BBox.BOXLEFT;
+import static net.sourceforge.mochadoom.menu.BBox.BOXRIGHT;
+import static net.sourceforge.mochadoom.menu.BBox.BOXTOP;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
+import static net.sourceforge.mochadoom.menu.fixed_t.FixedDiv;
+import static net.sourceforge.mochadoom.menu.fixed_t.FixedMul;
+import static net.sourceforge.mochadoom.menu.fixed_t.MAPFRACUNIT;
 import static net.sourceforge.mochadoom.rendering.line_t.ML_BLOCKING;
 import static net.sourceforge.mochadoom.rendering.line_t.ML_BLOCKMONSTERS;
 import static net.sourceforge.mochadoom.rendering.line_t.ML_SECRET;
@@ -124,6 +98,31 @@ import static net.sourceforge.mochadoom.utils.C2JUtils.eval;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import net.sourceforge.mochadoom.data.Tables;
+import net.sourceforge.mochadoom.data.mapthing_t;
+import net.sourceforge.mochadoom.data.mobjinfo_t;
+import net.sourceforge.mochadoom.data.mobjtype_t;
+import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
+import net.sourceforge.mochadoom.data.state_t;
+import net.sourceforge.mochadoom.data.mobjinfo.BlackZombie_t;
+import net.sourceforge.mochadoom.data.mobjinfo.GrayZombie_t;
+import net.sourceforge.mochadoom.data.mobjinfo.GreenZombie_t;
+import net.sourceforge.mochadoom.data.mobjinfo.RedZombie_t;
+import net.sourceforge.mochadoom.defines.Card;
+import net.sourceforge.mochadoom.defines.Skill;
+import net.sourceforge.mochadoom.defines.SlopeType;
+import net.sourceforge.mochadoom.defines.StateNum;
+import net.sourceforge.mochadoom.doom.DoomStatus;
+import net.sourceforge.mochadoom.doom.player_t;
+import net.sourceforge.mochadoom.doom.think_t;
+import net.sourceforge.mochadoom.doom.thinker_t;
+import net.sourceforge.mochadoom.doom.weapontype_t;
+import net.sourceforge.mochadoom.rendering.line_t;
+import net.sourceforge.mochadoom.rendering.sector_t;
+import net.sourceforge.mochadoom.rendering.side_t;
+import net.sourceforge.mochadoom.rendering.subsector_t;
+import net.sourceforge.mochadoom.utils.C2JUtils;
 
 /**
  * Action functions need to be aware of:
@@ -1289,6 +1288,22 @@ public class Actions extends UnifiedGameMap {
         LineAttack(mo, angle, MISSILERANGE, bulletslope, damage);
     }
 
+    /*void
+    Plasma2
+    (mobj_t mo,
+     boolean accurate) {
+        long angle;
+        int damage;
+
+        damage = 30 * (RND.P_Random() % 3 + 1);
+        angle = mo.angle;
+
+        if (!accurate)
+            angle += (RND.P_Random() - RND.P_Random()) << 18;
+
+        LineAttack(mo, angle, MISSILERANGE, bulletslope, damage);
+    }*/
+
     boolean Move(mobj_t actor) {
         // fixed_t
         int tryx;
@@ -1627,7 +1642,7 @@ public class Actions extends UnifiedGameMap {
       mobj.info.meleestate = StateNum.S_SARG_ATK1;
       mobj.info.speed = info.speed;
       mobj.info.spawnhealth = info.spawnhealth;
-      
+
       mobj.x = x;
       mobj.y = y;
       mobj.radius = info.radius;
@@ -1665,7 +1680,7 @@ public class Actions extends UnifiedGameMap {
     
     private mobjinfo_t GetZombieType(mobjtype_t type, mobj_t source) {
       if(type == mobjtype_t.MT_GREENZOMBIE){
-        return new GreenZombie_t( 
+        return new GreenZombie_t(
             mobjinfo[source.type.ordinal()].doomednum,        // doomednum
             mobjinfo[source.type.ordinal()].spawnstate,        // spawnstate
             mobjinfo[source.type.ordinal()].spawnhealth,        // spawnhealth
@@ -1691,7 +1706,7 @@ public class Actions extends UnifiedGameMap {
             mobjinfo[source.type.ordinal()].raisestate        // raisestate
       );
       } else if (type == mobjtype_t.MT_REDZOMBIE){
-        return new RedZombie_t( 
+        return new RedZombie_t(
             mobjinfo[source.type.ordinal()].doomednum,        // doomednum
             mobjinfo[source.type.ordinal()].spawnstate,        // spawnstate
             mobjinfo[source.type.ordinal()].spawnhealth,        // spawnhealth
@@ -1717,7 +1732,7 @@ public class Actions extends UnifiedGameMap {
             mobjinfo[source.type.ordinal()].raisestate        // raisestate
       );
       } else if (type == mobjtype_t.MT_GRAYZOMBIE){
-        return new GrayZombie_t( 
+        return new GrayZombie_t(
             mobjinfo[source.type.ordinal()].doomednum,        // doomednum
             mobjinfo[source.type.ordinal()].spawnstate,        // spawnstate
             mobjinfo[source.type.ordinal()].spawnhealth,        // spawnhealth
@@ -1743,7 +1758,7 @@ public class Actions extends UnifiedGameMap {
             mobjinfo[source.type.ordinal()].raisestate        // raisestate
         );
       } else{
-        return new BlackZombie_t( 
+        return new BlackZombie_t(
             mobjinfo[source.type.ordinal()].doomednum,        // doomednum
             mobjinfo[source.type.ordinal()].spawnstate,        // spawnstate
             mobjinfo[source.type.ordinal()].spawnhealth,        // spawnhealth
@@ -2015,7 +2030,7 @@ public class Actions extends UnifiedGameMap {
             z = ONCEILINGZ;
         else
             z = ONFLOORZ;
-        
+
         // BJPR: AQUÍ Spawn mapa inicial.
         mobj = SpawnMobj(x, y, z, mobjtype_t.values()[i]);
         //BJPR: MONSTER SPAWN
@@ -2034,9 +2049,9 @@ public class Actions extends UnifiedGameMap {
             createNewZombiesSurroundings(4, zombieDistance, z, mthing);
           } else if(DM.gameskill == Skill.sk_hard && (DM.hordemode == 1)) {
             createNewZombiesSurroundings(30, zombieDistance, z, mthing);
-          }  
+          }
         }
-        
+
         mobj.spawnpoint.copyFrom(mthing);
 
         if (mobj.tics > 0)
@@ -2058,7 +2073,7 @@ public class Actions extends UnifiedGameMap {
      * @param x
      * @param y
      * @param z
-     * @param mthing 
+     * @param mthing
      */
     void createNewZombiesSurroundings(int numberOfSpawns, int radius, int z, mapthing_t mthing){
       mobj_t mobj;
@@ -2072,7 +2087,7 @@ public class Actions extends UnifiedGameMap {
         checkMobjInBounds(mthing, mobj);
       }
     }
-    
+
     /**
      * Verifies if new mobj is inside map bounds.
      * @param mthing
@@ -2093,7 +2108,7 @@ public class Actions extends UnifiedGameMap {
           mobj.flags |= MF_AMBUSH;
       } else {
         RemoveMobj(mobj);
-      }    
+      }
     }
 
     /**
@@ -2243,6 +2258,52 @@ public class Actions extends UnifiedGameMap {
         CheckMissileSpawn(th);
     }
 
+    public void SpawnPlayerMissileWithAngle(mobj_t source, mobjtype_t type, long an) {
+        mobj_t th;
+
+        int x, y, z, slope; // think_t
+
+        // see which target is to be aimed at
+
+        slope = AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+
+        if (linetarget == null) {
+            an += 1 << 26;
+            an &= BITS32;
+            slope = AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+
+            if (linetarget == null) {
+                an -= 2 << 26;
+                an &= BITS32;
+                slope = AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+            }
+
+            if (linetarget == null) {
+                an = an & BITS32;
+                // angle should be "sane"..right?
+                // Just this line allows freelook.
+                slope = ((source.player.lookdir) << FRACBITS) / 173;
+            }
+        }
+
+        x = source.x;
+        y = source.y;
+        z = source.z + 4 * 8 * FRACUNIT + slope;
+
+        th = SpawnMobj(x, y, z, type);
+
+        if (th.info.seesound != null)
+            S.StartSound(th, th.info.seesound);
+
+        th.target = source;
+        th.angle = an;
+        th.momx = FixedMul(th.info.speed, finecosine(an));
+        th.momy = FixedMul(th.info.speed, finesine(an));
+        th.momz = FixedMul(th.info.speed, slope);
+
+        CheckMissileSpawn(th);
+    }
+
     //
     // P_DamageMobj
     // Damages both enemies and players
@@ -2266,6 +2327,15 @@ public class Actions extends UnifiedGameMap {
           //System.out.println("its acid");
           return;
         }
+
+        if(inflictor.type == mobjtype_t.MT_ALTERNATEPLASMA){
+        	// si tiene velocidad es monstruo
+        	// BJPR: luego deberia ser target.isMonster()
+        	if(target.info.speed > 0){
+        		target.burnMobj(30, 1000);
+        	}
+        }
+
         if (!eval(target.flags & MF_SHOOTABLE))
             return; // shouldn't happen...
 
@@ -2279,8 +2349,8 @@ public class Actions extends UnifiedGameMap {
         player = target.player;
         if ((player != null) && DM.gameskill == Skill.sk_baby)
             damage >>= 1;   // take half damage in trainer mode
-        
-        if (source != null && source.info.getType().equals("MT_ZOMBIE") && player != null){
+
+        if (source.info.getType().equals("MT_ZOMBIE") && player != null){
             switch (source.type) {
               case MT_GREENZOMBIE:
                   player.poisonPlayer(1, 3000);
@@ -2302,7 +2372,7 @@ public class Actions extends UnifiedGameMap {
          /*if(inflictor.type == mobjtype_t.MT_POSSESSED && player != null){
             player.poisonPlayer(5, 1000);
             System.out.println("poison");
-            
+
          }*/
 
         // Some close combat weapons should not
@@ -2381,7 +2451,7 @@ public class Actions extends UnifiedGameMap {
                 I.Tactile(40, 10, 40 + temp * 2);
         }
 
-        // do the damage 
+        // do the damage    
         target.health -= damage;
         if (target.health <= 0) {
             KillMobj(source, target);
@@ -2519,7 +2589,7 @@ public class Actions extends UnifiedGameMap {
         }
 
         mo = SpawnMobj(target.x, target.y, ONFLOORZ, item);
-        mo.flags |= MF_DROPPED;    // special versions of items       
+        mo.flags |= MF_DROPPED;    // special versions of items
     }
 
     /**
@@ -3746,6 +3816,17 @@ public class Actions extends UnifiedGameMap {
         int oldx, oldy; // fixed_t    
         boolean side, oldside; // both were int
         line_t ld;
+
+
+        if(thing.burned && System.currentTimeMillis() - thing.lastBurnDamage > thing.burnFreq){
+        	thing.lastBurnDamage = System.currentTimeMillis();
+        	System.out.println("burn");
+        	int newHealth = thing.health - thing.burnDamage;
+        	thing.health = newHealth > 0? newHealth: 0;
+        	if(thing.health == 0){
+        		KillMobj(thing, thing);
+        	}
+        }
 
         floatok = false;
         if (!CheckPosition(thing, x, y))

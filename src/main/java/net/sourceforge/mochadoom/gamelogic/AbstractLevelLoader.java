@@ -1,9 +1,18 @@
 package net.sourceforge.mochadoom.gamelogic;
 
+import static net.sourceforge.mochadoom.data.Defines.BLOCKMAPPADDING;
+import static net.sourceforge.mochadoom.data.Defines.MAPBLOCKSHIFT;
+import static net.sourceforge.mochadoom.data.Defines.MAPBLOCKUNITS;
+import static net.sourceforge.mochadoom.data.Defines.NF_SUBSECTOR;
+import static net.sourceforge.mochadoom.data.Defines.PU_LEVEL;
+import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_NOBLOCKMAP;
+import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_NOSECTOR;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
+import static net.sourceforge.mochadoom.utils.C2JUtils.flags;
+
 import net.sourceforge.mochadoom.data.Limits;
 import net.sourceforge.mochadoom.data.mapthing_t;
 import net.sourceforge.mochadoom.doom.DoomStatus;
-import net.sourceforge.mochadoom.system.IDoomSystem;
 import net.sourceforge.mochadoom.menu.BBox;
 import net.sourceforge.mochadoom.rendering.Renderer;
 import net.sourceforge.mochadoom.rendering.TextureManager;
@@ -15,19 +24,10 @@ import net.sourceforge.mochadoom.rendering.side_t;
 import net.sourceforge.mochadoom.rendering.subsector_t;
 import net.sourceforge.mochadoom.rendering.vertex_t;
 import net.sourceforge.mochadoom.sound.IDoomSound;
+import net.sourceforge.mochadoom.system.IDoomSystem;
 import net.sourceforge.mochadoom.utils.C2JUtils;
 import net.sourceforge.mochadoom.video.DoomVideoRenderer;
 import net.sourceforge.mochadoom.wad.IWadLoader;
-
-import static net.sourceforge.mochadoom.data.Defines.BLOCKMAPPADDING;
-import static net.sourceforge.mochadoom.data.Defines.MAPBLOCKSHIFT;
-import static net.sourceforge.mochadoom.data.Defines.MAPBLOCKUNITS;
-import static net.sourceforge.mochadoom.data.Defines.NF_SUBSECTOR;
-import static net.sourceforge.mochadoom.data.Defines.PU_LEVEL;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
-import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_NOBLOCKMAP;
-import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_NOSECTOR;
-import static net.sourceforge.mochadoom.utils.C2JUtils.flags;
 
 /**
  * The idea is to lump common externally readable properties that need DIRECT

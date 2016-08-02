@@ -1,13 +1,13 @@
 package net.sourceforge.mochadoom.rendering;
 
-import net.sourceforge.mochadoom.doom.player_t;
-import net.sourceforge.mochadoom.utils.C2JUtils;
-
 import static net.sourceforge.mochadoom.data.Tables.ANG180;
 import static net.sourceforge.mochadoom.data.Tables.ANG270;
 import static net.sourceforge.mochadoom.data.Tables.ANG90;
 import static net.sourceforge.mochadoom.data.Tables.SlopeDiv;
 import static net.sourceforge.mochadoom.data.Tables.tantoangle;
+
+import net.sourceforge.mochadoom.doom.player_t;
+import net.sourceforge.mochadoom.utils.C2JUtils;
 
 public class ViewVars {
 

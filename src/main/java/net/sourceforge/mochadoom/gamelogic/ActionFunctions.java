@@ -1,27 +1,7 @@
 package net.sourceforge.mochadoom.gamelogic;
 
-import net.sourceforge.mochadoom.data.Tables;
-import net.sourceforge.mochadoom.data.mobjinfo_t;
-import net.sourceforge.mochadoom.data.mobjtype_t;
-import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
-import net.sourceforge.mochadoom.data.state_t;
-import net.sourceforge.mochadoom.defines.Skill;
-import net.sourceforge.mochadoom.defines.StateNum;
-import net.sourceforge.mochadoom.doom.DoomStatus;
-import net.sourceforge.mochadoom.doom.IDoomGame;
-import net.sourceforge.mochadoom.doom.player_t;
-import net.sourceforge.mochadoom.doom.think_t;
-import net.sourceforge.mochadoom.doom.thinker_t;
-import net.sourceforge.mochadoom.doom.weapontype_t;
-import net.sourceforge.mochadoom.system.DoomStatusAware;
-import net.sourceforge.mochadoom.menu.IRandom;
-import net.sourceforge.mochadoom.gamelogic.UnifiedGameMap.Enemies;
-import net.sourceforge.mochadoom.rendering.Renderer;
-import net.sourceforge.mochadoom.rendering.line_t;
-import net.sourceforge.mochadoom.sound.IDoomSound;
-
-import static net.sourceforge.mochadoom.data.Defines.BT_ATTACK;
 import static net.sourceforge.mochadoom.data.Defines.BT_ALTERN;
+import static net.sourceforge.mochadoom.data.Defines.BT_ATTACK;
 import static net.sourceforge.mochadoom.data.Defines.MELEERANGE;
 import static net.sourceforge.mochadoom.data.Defines.MISSILERANGE;
 import static net.sourceforge.mochadoom.data.Defines.PST_DEAD;
@@ -48,9 +28,6 @@ import static net.sourceforge.mochadoom.doom.player_t.WEAPONBOTTOM;
 import static net.sourceforge.mochadoom.doom.player_t.WEAPONTOP;
 import static net.sourceforge.mochadoom.doom.player_t.ps_flash;
 import static net.sourceforge.mochadoom.doom.player_t.ps_weapon;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
-import static net.sourceforge.mochadoom.menu.fixed_t.FixedMul;
-import static net.sourceforge.mochadoom.menu.fixed_t.MAPFRACUNIT;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.DI_NODIR;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.xspeed;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.yspeed;
@@ -62,8 +39,31 @@ import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SHADOW;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SHOOTABLE;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SKULLFLY;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SOLID;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
+import static net.sourceforge.mochadoom.menu.fixed_t.FixedMul;
+import static net.sourceforge.mochadoom.menu.fixed_t.MAPFRACUNIT;
 import static net.sourceforge.mochadoom.rendering.line_t.ML_BLOCKING;
 import static net.sourceforge.mochadoom.utils.C2JUtils.eval;
+
+import net.sourceforge.mochadoom.data.Tables;
+import net.sourceforge.mochadoom.data.mobjinfo_t;
+import net.sourceforge.mochadoom.data.mobjtype_t;
+import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
+import net.sourceforge.mochadoom.data.state_t;
+import net.sourceforge.mochadoom.defines.Skill;
+import net.sourceforge.mochadoom.defines.StateNum;
+import net.sourceforge.mochadoom.doom.DoomStatus;
+import net.sourceforge.mochadoom.doom.IDoomGame;
+import net.sourceforge.mochadoom.doom.player_t;
+import net.sourceforge.mochadoom.doom.think_t;
+import net.sourceforge.mochadoom.doom.thinker_t;
+import net.sourceforge.mochadoom.doom.weapontype_t;
+import net.sourceforge.mochadoom.gamelogic.UnifiedGameMap.Enemies;
+import net.sourceforge.mochadoom.menu.IRandom;
+import net.sourceforge.mochadoom.rendering.Renderer;
+import net.sourceforge.mochadoom.rendering.line_t;
+import net.sourceforge.mochadoom.sound.IDoomSound;
+import net.sourceforge.mochadoom.system.DoomStatusAware;
 
 public class ActionFunctions implements DoomStatusAware {
 
@@ -74,6 +74,7 @@ public class ActionFunctions implements DoomStatusAware {
         Lower = new A_Lower();
         Raise = new A_Raise();
         Punch = new A_Punch();
+        PunchAlternate = new A_PunchAlternate();
         ReFire = new A_ReFire();
         FirePistol = new A_FirePistol();
         FirePistolAlternate = new A_FirePistolAlternate();
@@ -89,12 +90,16 @@ public class ActionFunctions implements DoomStatusAware {
         LoadShotgun2 = new A_LoadShotgun2();
         CloseShotgun2 = new A_CloseShotgun2();
         FireCGun = new A_FireCGun();
+        FireCGunAltern = new A_FireCGunAltern();
         GunFlash = new A_GunFlash();
         FireMissile = new A_FireMissile();
+        FireMissileAltern = new A_FireMissileAltern();
         Saw = new A_Saw();
         FirePlasma = new A_FirePlasma();
+        FirePlasma2 = new A_FirePlasmaAlternate();
         BFGsound = new A_BFGsound();
         FireBFG = new A_FireBFG();
+        FireBFGAltern = new A_FireBFGAltern();
         BFGSpray = new A_BFGSpray();
         Explode = new A_Explode();
         Pain = new A_Pain();
@@ -194,6 +199,7 @@ public class ActionFunctions implements DoomStatusAware {
     ActionType2 Lower;
     ActionType2 Raise;
     ActionType2 Punch;
+    ActionType2 PunchAlternate;
     ActionType2 ReFire;
     ActionType2 FirePistol;
     ActionType2 FirePistolAlternate;
@@ -209,12 +215,16 @@ public class ActionFunctions implements DoomStatusAware {
     ActionType2 LoadShotgun2;
     ActionType2 CloseShotgun2;
     ActionType2 FireCGun;
+    ActionType2 FireCGunAltern;
     ActionType2 GunFlash;
     ActionType2 FireMissile;
+    ActionType2 FireMissileAltern;
     ActionType2 Saw;
     ActionType2 FirePlasma;
+    ActionType2 FirePlasma2;	// secundario plasma
     ActionType2 BFGsound;
     ActionType2 FireBFG;
+    ActionType2 FireBFGAltern;
     ActionType1 BFGSpray;
     ActionType1 Explode;
     ActionType1 Pain;
@@ -309,6 +319,9 @@ public class ActionFunctions implements DoomStatusAware {
             case A_Punch:
                 st.acp2 = Punch;
                 break;
+            case A_PunchAlternate:
+                st.acp2 = PunchAlternate;
+                break;
             case A_ReFire:
                 st.acp2 = ReFire;
                 break;
@@ -349,11 +362,17 @@ public class ActionFunctions implements DoomStatusAware {
             case A_FireCGun:
                 st.acp2 = FireCGun;
                 break;
+            case A_FireCGunAltern:
+                st.acp2 = FireCGunAltern;
+                break;
             case A_GunFlash:
                 st.acp2 = GunFlash;
                 break;
             case A_FireMissile:
                 st.acp2 = FireMissile;
+                break;
+            case A_FireMissileAltern:
+                st.acp2 = FireMissileAltern;
                 break;
             case A_Saw:
                 st.acp2 = Saw;
@@ -361,11 +380,17 @@ public class ActionFunctions implements DoomStatusAware {
             case A_FirePlasma:
                 st.acp2 = FirePlasma;
                 break;
+            case A_FirePlasmaAlternate:	//secundario plasma gun
+                st.acp2 = FirePlasma2;
+                break;
             case A_BFGsound:
                 st.acp2 = BFGsound;
                 break;
             case A_FireBFG:
                 st.acp2 = FireBFG;
+                break;
+            case A_FireBFGAltern:
+                st.acp2 = FireBFGAltern;
                 break;
             case A_BFGSpray:
                 st.acp1 = BFGSpray;
@@ -583,6 +608,9 @@ public class ActionFunctions implements DoomStatusAware {
             case A_Punch:
                 st.acp2 = Punch;
                 break;
+            case A_PunchAlternate:
+                st.acp2 = PunchAlternate;
+                break;
             case A_ReFire:
                 st.acp2 = ReFire;
                 break;
@@ -623,11 +651,17 @@ public class ActionFunctions implements DoomStatusAware {
             case A_FireCGun:
                 st.acp2 = FireCGun;
                 break;
+            case A_FireCGunAltern:
+                st.acp2 = FireCGunAltern;
+                break;
             case A_GunFlash:
                 st.acp2 = GunFlash;
                 break;
             case A_FireMissile:
                 st.acp2 = FireMissile;
+                break;
+            case A_FireMissileAltern:
+                st.acp2 = FireMissileAltern;
                 break;
             case A_Saw:
                 st.acp2 = Saw;
@@ -635,11 +669,17 @@ public class ActionFunctions implements DoomStatusAware {
             case A_FirePlasma:
                 st.acp2 = FirePlasma;
                 break;
+            case A_FirePlasmaAlternate:
+                st.acp2 = FirePlasma2;
+                break;
             case A_BFGsound:
                 st.acp2 = BFGsound;
                 break;
             case A_FireBFG:
                 st.acp2 = FireBFG;
+                break;
+            case A_FireBFGAltern:
+                st.acp2 = FireBFGAltern;
                 break;
             case A_BFGSpray:
                 st.acp1 = BFGSpray;
@@ -2100,6 +2140,39 @@ public class ActionFunctions implements DoomStatusAware {
             }
         }
     }
+    
+    //
+    // A_PunchAlternate
+    //
+    class A_PunchAlternate implements ActionType2 {
+        public void invoke(player_t player, pspdef_t psp) {
+            long angle; //angle_t
+            int damage;
+            int slope;
+
+            damage = (RND.P_Random() % 10 + 20) << 1;
+
+            if (eval(player.powers[pw_strength]))
+                damage *= 10;
+
+            angle = player.mo.angle;
+            //angle = (angle+(RND.P_Random()-RND.P_Random())<<18)/*&BITS32*/;
+            // _D_: for some reason, punch didnt work until I change this
+            // I think it's because of "+" VS "<<" prioritys...
+            angle += (RND.P_Random() - RND.P_Random()) << 18;
+            slope = A.AimLineAttack(player.mo, angle, MELEERANGE);
+            A.LineAttack(player.mo, angle, MELEERANGE, slope, damage);
+
+            // turn to face target
+            if (eval(A.linetarget)) {
+                S.StartSound(player.mo, sfxenum_t.sfx_punch);
+                player.mo.angle = R.PointToAngle2(player.mo.x,
+                        player.mo.y,
+                        A.linetarget.x,
+                        A.linetarget.y) & BITS32;
+            }
+        }
+    }
 
 
     //
@@ -2163,6 +2236,16 @@ public class ActionFunctions implements DoomStatusAware {
             A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_ROCKET);
         }
     }
+    
+    //
+    // A_FireMissileAltern
+    //
+    class A_FireMissileAltern implements ActionType2 {
+        public void invoke(player_t player, pspdef_t psp) {
+            player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()]--;
+            A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_ROCKET);
+        }
+    }
 
 
     //
@@ -2179,6 +2262,23 @@ public class ActionFunctions implements DoomStatusAware {
             player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()] -= BFGCELLS;
             A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_BFG);
         }
+    }
+
+    class A_FireBFGAltern implements ActionType2 {
+        // plasma cells for a bfg attack
+        // IDEA: make action functions partially parametrizable?
+
+        public void invoke(player_t player, pspdef_t psp) {
+            player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()] = 0;
+            //A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_BFG);
+            int bfgcount = -800000000;
+            long playerPosition = player.mo.angle;
+            //missiles arround the player
+            for(bfgcount = -1000000000; bfgcount<=1000000000; bfgcount+=200000000){
+                A.SpawnPlayerMissileWithAngle(player.mo, mobjtype_t.MT_BFG, playerPosition + bfgcount);
+            }
+        }
+
     }
 
 
@@ -2212,6 +2312,37 @@ public class ActionFunctions implements DoomStatusAware {
         }
     }
 
+    class A_FireCGunAltern implements ActionType2 {
+        public void invoke(player_t player, pspdef_t psp) {
+            // For convenience.
+            int readyweap = player.readyweapon.ordinal();
+            int flashstate = weaponinfo[readyweap].flashstate.ordinal();
+            int current_state = psp.state.id;
+
+            S.StartSound(player.mo, sfxenum_t.sfx_pistol);
+            if (!eval(player.ammo[weaponinfo[readyweap].ammo.ordinal()]))
+                return;
+
+            player.mo.SetMobjState(StateNum.S_PLAY_ATK2);
+            player.ammo[weaponinfo[readyweap].ammo.ordinal()]--;
+
+            // Damage the player when using the Alternative mode of the MachineGun,
+            // this is because it is faster than the normal mode but in exchange
+            // it damages the player
+            player.DamagePlayer(1);
+
+            // MAES: Code to alternate between two different gun flashes
+            // needed a clear rewrite, as it was way too messy.
+            // We know that the flash states are a certain amount away from
+            // the firing states. This amount is two frames.
+            player.SetPsprite(ps_flash, StateNum.values()[flashstate + current_state - StateNum.S_CHAIN4.ordinal()-1]
+            );
+
+            A.P_BulletSlope(player.mo);
+
+            A.P_GunShot(player.mo, !eval(player.refire));
+        }
+    }
     //
     // A_FirePlasma
     //
@@ -2224,6 +2355,20 @@ public class ActionFunctions implements DoomStatusAware {
                     weaponinfo[player.readyweapon.ordinal()].flashstate);
 
             A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_PLASMA);
+        }
+    }
+    // Secundario de A_FirePlasma
+    class A_FirePlasmaAlternate implements ActionType2 {
+        public void invoke(player_t player, pspdef_t psp) {
+           player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()]--;
+            
+            System.out.println("PlasmaAlternate");
+
+            player.SetPsprite(
+                    ps_flash,
+                    weaponinfo[player.readyweapon.ordinal()].flashstate);
+
+            A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_ALTERNATEPLASMA);
         }
     }
 
