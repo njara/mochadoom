@@ -2280,7 +2280,7 @@ public class Actions extends UnifiedGameMap {
         if ((player != null) && DM.gameskill == Skill.sk_baby)
             damage >>= 1;   // take half damage in trainer mode
         
-        if (source.info.getType().equals("MT_ZOMBIE") && player != null){
+        if (source != null && source.info.getType().equals("MT_ZOMBIE") && player != null){
             switch (source.type) {
               case MT_GREENZOMBIE:
                   player.poisonPlayer(1, 3000);
@@ -2381,7 +2381,7 @@ public class Actions extends UnifiedGameMap {
                 I.Tactile(40, 10, 40 + temp * 2);
         }
 
-        // do the damage    
+        // do the damage 
         target.health -= damage;
         if (target.health <= 0) {
             KillMobj(source, target);
