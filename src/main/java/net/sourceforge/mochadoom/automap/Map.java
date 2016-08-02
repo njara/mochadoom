@@ -598,6 +598,16 @@ public abstract class Map<T, V>
     };
 
     private cheatseq_t cheat_strobe = new cheatseq_t(cheat_strobe_seq, 0);
+    
+    /**
+     * Cheat to show the zombies in the map
+     */
+    protected char[] cheat_showZombies_seq = {'s', 'h', 'w', 'z', 0xff};
+    
+    private cheatseq_t cheat_showZombies = new cheatseq_t(cheat_showZombies_seq, 0);
+    
+    // Begin without showing the zombies in the map:
+    private int showZombies = 0;
 
     private boolean stopped = true;
 
@@ -1004,9 +1014,14 @@ public abstract class Map<T, V>
                     cheatstate = false;
                     rc = false;
             }
-            if (!DM.deathmatch && cheat_amap.CheckCheat((char) ev.data1)) {
+            if (!DM.deathmatch) {
+              if (cheat_amap.CheckCheat((char) ev.data1)) {
                 rc = false;
                 cheating = (cheating + 1) % 3;
+              }
+              if (cheat_showZombies.CheckCheat((char) ev.data1)) {
+                showZombies = (showZombies + 1) % 2;
+              }
             }
             if (cheat_strobe.CheckCheat((char) ev.data1)) {
                 strobe = !strobe;
@@ -1598,8 +1613,10 @@ public abstract class Map<T, V>
               if(t.info.getType().equals("MT_ZOMBIE")) {
                 drawZombie(t);
               } else {
-                drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
-                        16 << FRACBITS, toBAMIndex(t.angle), color, t.x, t.y);
+                if (cheating == 2) {
+                  drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
+                          16 << FRACBITS, toBAMIndex(t.angle), color, t.x, t.y);
+                }
               }
               t = (mobj_t) t.snext;
             }
@@ -1612,28 +1629,30 @@ public abstract class Map<T, V>
      * @param zombie the zombie that has to be drawed.
      */
     private void drawZombie(mobj_t zombie) {
-      String type = zombie.info.getsubType();
-      int green = V.getBaseColor(GREENS);
-      int red = V.getBaseColor(REDS);
-      int gray = V.getBaseColor(GRAYS);
-      int yellow = V.getBaseColor(YELLOWS);
-      switch(type) {
-        case "MT_GREENZOMBIE":
-          drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
-              16 << FRACBITS, toBAMIndex(zombie.angle), green, zombie.x, zombie.y);
-          break;
-        case "MT_REDZOMBIE":
-          drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
-              16 << FRACBITS, toBAMIndex(zombie.angle), red, zombie.x, zombie.y);
-          break;
-        case "MT_GRAYZOMBIE":
-          drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
-              16 << FRACBITS, toBAMIndex(zombie.angle), gray, zombie.x, zombie.y);
-          break;
-        case "MT_BLACKZOMBIE":
-          drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
-              16 << FRACBITS, toBAMIndex(zombie.angle), yellow, zombie.x, zombie.y);
-          break;
+      if (showZombies != 0) {
+        String type = zombie.info.getsubType();
+        int green = V.getBaseColor(GREENS);
+        int red = V.getBaseColor(REDS);
+        int gray = V.getBaseColor(GRAYS);
+        int yellow = V.getBaseColor(YELLOWS);
+        switch(type) {
+          case "MT_GREENZOMBIE":
+            drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
+                16 << FRACBITS, toBAMIndex(zombie.angle), green, zombie.x, zombie.y);
+            break;
+          case "MT_REDZOMBIE":
+            drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
+                16 << FRACBITS, toBAMIndex(zombie.angle), red, zombie.x, zombie.y);
+            break;
+          case "MT_GRAYZOMBIE":
+            drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
+                16 << FRACBITS, toBAMIndex(zombie.angle), gray, zombie.x, zombie.y);
+            break;
+          case "MT_BLACKZOMBIE":
+            drawLineCharacter(thintriangle_guy, NUMTHINTRIANGLEGUYLINES,
+                16 << FRACBITS, toBAMIndex(zombie.angle), yellow, zombie.x, zombie.y);
+            break;
+        }
       }
     }
 
@@ -1669,8 +1688,9 @@ public abstract class Map<T, V>
             drawGrid(V.getBaseColor(GRIDCOLORS));
         drawWalls();
         drawPlayers();
-        if (cheating == 2)
+        if ((cheating == 2) || (showZombies == 1)) {
             drawThings(THINGCOLORS, THINGRANGE);
+        }
         drawCrosshair(V.getBaseColor(XHAIRCOLORS));
 
         drawMarks();
