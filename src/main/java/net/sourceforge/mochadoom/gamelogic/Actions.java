@@ -1,31 +1,5 @@
 package net.sourceforge.mochadoom.gamelogic;
 
-<<<<<<< HEAD
-=======
-import net.sourceforge.mochadoom.data.Tables;
-import net.sourceforge.mochadoom.data.mapthing_t;
-import net.sourceforge.mochadoom.data.mobjinfo.*;
-import net.sourceforge.mochadoom.data.mobjinfo_t;
-import net.sourceforge.mochadoom.data.mobjtype_t;
-import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
-import net.sourceforge.mochadoom.data.spritenum_t;
-import net.sourceforge.mochadoom.data.state_t;
-import net.sourceforge.mochadoom.defines.Card;
-import net.sourceforge.mochadoom.defines.Skill;
-import net.sourceforge.mochadoom.defines.SlopeType;
-import net.sourceforge.mochadoom.defines.StateNum;
-import net.sourceforge.mochadoom.doom.DoomStatus;
-import net.sourceforge.mochadoom.doom.player_t;
-import net.sourceforge.mochadoom.doom.think_t;
-import net.sourceforge.mochadoom.doom.thinker_t;
-import net.sourceforge.mochadoom.doom.weapontype_t;
-import net.sourceforge.mochadoom.rendering.line_t;
-import net.sourceforge.mochadoom.rendering.sector_t;
-import net.sourceforge.mochadoom.rendering.side_t;
-import net.sourceforge.mochadoom.rendering.subsector_t;
-import net.sourceforge.mochadoom.utils.C2JUtils;
-
->>>>>>> a955944a8e40c24e0686432096526f6af25c96fe
 import static net.sourceforge.mochadoom.data.Defines.BASETHRESHOLD;
 import static net.sourceforge.mochadoom.data.Defines.FLOATSPEED;
 import static net.sourceforge.mochadoom.data.Defines.ITEMQUESIZE;
@@ -132,6 +106,7 @@ import net.sourceforge.mochadoom.data.mobjtype_t;
 import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
 import net.sourceforge.mochadoom.data.state_t;
 import net.sourceforge.mochadoom.data.mobjinfo.BlackZombie_t;
+import net.sourceforge.mochadoom.data.mobjinfo.Flare_t;
 import net.sourceforge.mochadoom.data.mobjinfo.GrayZombie_t;
 import net.sourceforge.mochadoom.data.mobjinfo.GreenZombie_t;
 import net.sourceforge.mochadoom.data.mobjinfo.RedZombie_t;
