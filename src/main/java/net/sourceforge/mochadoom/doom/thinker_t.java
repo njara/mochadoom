@@ -1,17 +1,18 @@
 package net.sourceforge.mochadoom.doom;
 
+import static net.sourceforge.mochadoom.utils.C2JUtils.pointer;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
 import net.sourceforge.mochadoom.gamelogic.ActionType1;
 import net.sourceforge.mochadoom.gamelogic.ActionType2;
 import net.sourceforge.mochadoom.gamelogic.ActionTypeSS;
 import net.sourceforge.mochadoom.wad.CacheableDoomObject;
 import net.sourceforge.mochadoom.wad.IPackableDoomObject;
 import net.sourceforge.mochadoom.wad.IReadableDoomObject;
-
-import static net.sourceforge.mochadoom.utils.C2JUtils.pointer;
 
 public class thinker_t implements CacheableDoomObject, IReadableDoomObject, IPackableDoomObject {
 

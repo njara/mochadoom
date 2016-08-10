@@ -1,5 +1,12 @@
 package net.sourceforge.mochadoom.sound;
 
+import static net.sourceforge.mochadoom.data.Tables.ANGLETOFINESHIFT;
+import static net.sourceforge.mochadoom.data.Tables.BITS32;
+import static net.sourceforge.mochadoom.data.Tables.finesine;
+import static net.sourceforge.mochadoom.data.sounds.S_sfx;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
+import static net.sourceforge.mochadoom.menu.fixed_t.FixedMul;
+
 import net.sourceforge.mochadoom.data.Defines;
 import net.sourceforge.mochadoom.data.musicinfo_t;
 import net.sourceforge.mochadoom.data.sfxinfo_t;
@@ -8,13 +15,6 @@ import net.sourceforge.mochadoom.data.sounds.musicenum_t;
 import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
 import net.sourceforge.mochadoom.doom.DoomStatus;
 import net.sourceforge.mochadoom.gamelogic.mobj_t;
-
-import static net.sourceforge.mochadoom.data.Tables.ANGLETOFINESHIFT;
-import static net.sourceforge.mochadoom.data.Tables.BITS32;
-import static net.sourceforge.mochadoom.data.Tables.finesine;
-import static net.sourceforge.mochadoom.data.sounds.S_sfx;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
-import static net.sourceforge.mochadoom.menu.fixed_t.FixedMul;
 
 /**
  * Some stuff that is not implementation dependant

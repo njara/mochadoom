@@ -87,4 +87,7 @@ public class mobjinfo_t {
     public <V> V getColorMap(LightsAndColors<V> colormaps){
       return colormaps.colormaps[colormaps.colormaps.length - 1];
     }
+    public boolean isZombie() {
+      return false;
+    }
 }

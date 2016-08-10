@@ -1,7 +1,11 @@
 package net.sourceforge.mochadoom.rendering;
 
-import net.sourceforge.mochadoom.doom.DoomStatus;
-import net.sourceforge.mochadoom.system.IDoomSystem;
+import static net.sourceforge.mochadoom.data.Defines.PU_CACHE;
+import static net.sourceforge.mochadoom.data.Defines.PU_STATIC;
+import static net.sourceforge.mochadoom.data.Defines.SKYFLATNAME;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -9,17 +13,14 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+
+import net.sourceforge.mochadoom.doom.DoomStatus;
 import net.sourceforge.mochadoom.gamelogic.AbstractLevelLoader;
+import net.sourceforge.mochadoom.system.IDoomSystem;
 import net.sourceforge.mochadoom.wad.DoomBuffer;
 import net.sourceforge.mochadoom.wad.IWadLoader;
 import net.sourceforge.mochadoom.wad.li_namespace;
 import net.sourceforge.mochadoom.wad.lumpinfo_t;
-
-import static net.sourceforge.mochadoom.data.Defines.PU_CACHE;
-import static net.sourceforge.mochadoom.data.Defines.PU_STATIC;
-import static net.sourceforge.mochadoom.data.Defines.SKYFLATNAME;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
 
 /**
  * An attempt to separate texture mapping functionality from

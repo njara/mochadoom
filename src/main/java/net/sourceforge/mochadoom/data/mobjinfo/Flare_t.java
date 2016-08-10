@@ -1,14 +1,15 @@
 package net.sourceforge.mochadoom.data.mobjinfo;
 
+import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_DROPOFF;
+import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_MISSILE;
+import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_NOBLOCKMAP;
+import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SHOOTABLE;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
+
 import net.sourceforge.mochadoom.data.mobjinfo_t;
 import net.sourceforge.mochadoom.data.sounds;
 import net.sourceforge.mochadoom.defines.StateNum;
 import net.sourceforge.mochadoom.rendering.LightsAndColors;
-
-import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_DROPOFF;
-import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_MISSILE;
-import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_NOBLOCKMAP;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
 
 /**
  * Created by nicolasjara on 04-08-16.
@@ -43,7 +44,7 @@ public class Flare_t extends mobjinfo_t {
                 100,        // mass
                 0,        // damage
                 sounds.sfxenum_t.sfx_None,        // activesound
-                MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF,        // flags
+                MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_SHOOTABLE,        // flags
                 StateNum.S_NULL        // raisestate
         );
         counter = 0;

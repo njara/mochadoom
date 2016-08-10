@@ -68,8 +68,4 @@ public class MT_Player_t extends mobjinfo_t{
     return "MT_PLAYER";
   }
   
-  @Override
-  public String getType(){
-    return "MT_ZOMBIE";
-  }
 }

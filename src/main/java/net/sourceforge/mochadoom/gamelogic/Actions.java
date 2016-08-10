@@ -1,28 +1,5 @@
 package net.sourceforge.mochadoom.gamelogic;
 
-import net.sourceforge.mochadoom.data.Tables;
-import net.sourceforge.mochadoom.data.mapthing_t;
-import net.sourceforge.mochadoom.data.mobjinfo.*;
-import net.sourceforge.mochadoom.data.mobjinfo_t;
-import net.sourceforge.mochadoom.data.mobjtype_t;
-import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
-import net.sourceforge.mochadoom.data.spritenum_t;
-import net.sourceforge.mochadoom.data.state_t;
-import net.sourceforge.mochadoom.defines.Card;
-import net.sourceforge.mochadoom.defines.Skill;
-import net.sourceforge.mochadoom.defines.SlopeType;
-import net.sourceforge.mochadoom.defines.StateNum;
-import net.sourceforge.mochadoom.doom.DoomStatus;
-import net.sourceforge.mochadoom.doom.player_t;
-import net.sourceforge.mochadoom.doom.think_t;
-import net.sourceforge.mochadoom.doom.thinker_t;
-import net.sourceforge.mochadoom.doom.weapontype_t;
-import net.sourceforge.mochadoom.rendering.line_t;
-import net.sourceforge.mochadoom.rendering.sector_t;
-import net.sourceforge.mochadoom.rendering.side_t;
-import net.sourceforge.mochadoom.rendering.subsector_t;
-import net.sourceforge.mochadoom.utils.C2JUtils;
-
 import static net.sourceforge.mochadoom.data.Defines.BASETHRESHOLD;
 import static net.sourceforge.mochadoom.data.Defines.FLOATSPEED;
 import static net.sourceforge.mochadoom.data.Defines.ITEMQUESIZE;
@@ -65,15 +42,6 @@ import static net.sourceforge.mochadoom.doom.English.PD_REDK;
 import static net.sourceforge.mochadoom.doom.English.PD_REDO;
 import static net.sourceforge.mochadoom.doom.English.PD_YELLOWK;
 import static net.sourceforge.mochadoom.doom.English.PD_YELLOWO;
-import static net.sourceforge.mochadoom.menu.BBox.BOXBOTTOM;
-import static net.sourceforge.mochadoom.menu.BBox.BOXLEFT;
-import static net.sourceforge.mochadoom.menu.BBox.BOXRIGHT;
-import static net.sourceforge.mochadoom.menu.BBox.BOXTOP;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
-import static net.sourceforge.mochadoom.menu.fixed_t.FixedDiv;
-import static net.sourceforge.mochadoom.menu.fixed_t.FixedMul;
-import static net.sourceforge.mochadoom.menu.fixed_t.MAPFRACUNIT;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.DI_EAST;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.DI_NODIR;
 import static net.sourceforge.mochadoom.gamelogic.ChaseDirections.DI_NORTH;
@@ -112,6 +80,15 @@ import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SPAWNCEILING;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_SPECIAL;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_TELEPORT;
 import static net.sourceforge.mochadoom.gamelogic.mobj_t.MF_TRANSSHIFT;
+import static net.sourceforge.mochadoom.menu.BBox.BOXBOTTOM;
+import static net.sourceforge.mochadoom.menu.BBox.BOXLEFT;
+import static net.sourceforge.mochadoom.menu.BBox.BOXRIGHT;
+import static net.sourceforge.mochadoom.menu.BBox.BOXTOP;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
+import static net.sourceforge.mochadoom.menu.fixed_t.FixedDiv;
+import static net.sourceforge.mochadoom.menu.fixed_t.FixedMul;
+import static net.sourceforge.mochadoom.menu.fixed_t.MAPFRACUNIT;
 import static net.sourceforge.mochadoom.rendering.line_t.ML_BLOCKING;
 import static net.sourceforge.mochadoom.rendering.line_t.ML_BLOCKMONSTERS;
 import static net.sourceforge.mochadoom.rendering.line_t.ML_SECRET;
@@ -121,6 +98,32 @@ import static net.sourceforge.mochadoom.utils.C2JUtils.eval;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import net.sourceforge.mochadoom.data.Tables;
+import net.sourceforge.mochadoom.data.mapthing_t;
+import net.sourceforge.mochadoom.data.mobjinfo_t;
+import net.sourceforge.mochadoom.data.mobjtype_t;
+import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
+import net.sourceforge.mochadoom.data.state_t;
+import net.sourceforge.mochadoom.data.mobjinfo.BlackZombie_t;
+import net.sourceforge.mochadoom.data.mobjinfo.Flare_t;
+import net.sourceforge.mochadoom.data.mobjinfo.GrayZombie_t;
+import net.sourceforge.mochadoom.data.mobjinfo.GreenZombie_t;
+import net.sourceforge.mochadoom.data.mobjinfo.RedZombie_t;
+import net.sourceforge.mochadoom.defines.Card;
+import net.sourceforge.mochadoom.defines.Skill;
+import net.sourceforge.mochadoom.defines.SlopeType;
+import net.sourceforge.mochadoom.defines.StateNum;
+import net.sourceforge.mochadoom.doom.DoomStatus;
+import net.sourceforge.mochadoom.doom.player_t;
+import net.sourceforge.mochadoom.doom.think_t;
+import net.sourceforge.mochadoom.doom.thinker_t;
+import net.sourceforge.mochadoom.doom.weapontype_t;
+import net.sourceforge.mochadoom.rendering.line_t;
+import net.sourceforge.mochadoom.rendering.sector_t;
+import net.sourceforge.mochadoom.rendering.side_t;
+import net.sourceforge.mochadoom.rendering.subsector_t;
+import net.sourceforge.mochadoom.utils.C2JUtils;
 
 /**
  * Action functions need to be aware of:
@@ -1577,7 +1580,6 @@ public class Actions extends UnifiedGameMap {
         mobj.type = type;
 
         if (type == mobjtype_t.MT_FLARE) {
-
             mobj.info = new Flare_t();
         } else {
 
@@ -1621,6 +1623,10 @@ public class Actions extends UnifiedGameMap {
         mobj.function = think_t.P_MobjThinker;
         AddThinker(mobj);
 
+        if (type == mobjtype_t.MT_FLARE) {
+          DM.Flare.add(mobj);
+        }
+        
         return mobj;
     }
 
@@ -2335,8 +2341,8 @@ public class Actions extends UnifiedGameMap {
             //System.out.println("its acid");
             return;
         }
-
-        if (inflictor.type == mobjtype_t.MT_ALTERNATEPLASMA) {
+        
+        if (inflictor != null && inflictor.type == mobjtype_t.MT_ALTERNATEPLASMA) {
             // si tiene velocidad es monstruo
             // BJPR: luego deberia ser target.isMonster()
             if (target.info.speed > 0) {
@@ -2358,7 +2364,7 @@ public class Actions extends UnifiedGameMap {
         if ((player != null) && DM.gameskill == Skill.sk_baby)
             damage >>= 1;   // take half damage in trainer mode
 
-        if (source.info.getType().equals("MT_ZOMBIE") && player != null) {
+        if (source != null && source.info.getType().equals("MT_ZOMBIE") && player != null) {
             switch (source.type) {
                 case MT_GREENZOMBIE:
                     player.poisonPlayer(1, 3000);

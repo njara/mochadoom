@@ -1,22 +1,5 @@
 package net.sourceforge.mochadoom.menu;
 
-import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
-import net.sourceforge.mochadoom.defines.GameState;
-import net.sourceforge.mochadoom.defines.Language;
-import net.sourceforge.mochadoom.defines.Skill;
-import net.sourceforge.mochadoom.doom.DoomStatus;
-import net.sourceforge.mochadoom.doom.English;
-import net.sourceforge.mochadoom.doom.event_t;
-import net.sourceforge.mochadoom.doom.evtype_t;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import net.sourceforge.mochadoom.rendering.patch_t;
-import net.sourceforge.mochadoom.utils.C2JUtils;
-import net.sourceforge.mochadoom.video.IVideoScale;
-import net.sourceforge.mochadoom.wad.DoomIO;
-
 import static net.sourceforge.mochadoom.data.Defines.HU_FONTSIZE;
 import static net.sourceforge.mochadoom.data.Defines.HU_FONTSTART;
 import static net.sourceforge.mochadoom.data.Defines.PU_CACHE;
@@ -59,6 +42,24 @@ import static net.sourceforge.mochadoom.game.Keys.KEY_LEFTARROW;
 import static net.sourceforge.mochadoom.game.Keys.KEY_MINUS;
 import static net.sourceforge.mochadoom.game.Keys.KEY_RIGHTARROW;
 import static net.sourceforge.mochadoom.game.Keys.KEY_UPARROW;
+
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
+import net.sourceforge.mochadoom.defines.GameState;
+import net.sourceforge.mochadoom.defines.Language;
+import net.sourceforge.mochadoom.defines.Skill;
+import net.sourceforge.mochadoom.doom.DoomStatus;
+import net.sourceforge.mochadoom.doom.English;
+import net.sourceforge.mochadoom.doom.event_t;
+import net.sourceforge.mochadoom.doom.evtype_t;
+import net.sourceforge.mochadoom.rendering.patch_t;
+import net.sourceforge.mochadoom.utils.C2JUtils;
+import net.sourceforge.mochadoom.video.IVideoScale;
+import net.sourceforge.mochadoom.wad.DoomIO;
 
 public class Menu extends AbstractDoomMenu {
 
