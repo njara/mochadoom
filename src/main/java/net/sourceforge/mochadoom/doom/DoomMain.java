@@ -184,6 +184,7 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
     public event_t[] events = new event_t[MAXEVENTS];
     public int eventhead;
     public int eventtail;
+    public ArrayList<mobj_t> Flare = new ArrayList<mobj_t>();
 
     /**
      * D_PostEvent
@@ -229,9 +230,9 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
     private boolean fullscreen = false;
     private GameState oldgamestate = GameState.GS_MINUS_ONE;
     private int borderdrawcount;
-    
+
     // no background map cheat
-    private char cheat_mymap_seq[] = {'m', 'a', 'r', 'c', 'o', 'p', 'o', 'l', 'o', 0xff};    
+    private char cheat_mymap_seq[] = {'m', 'a', 'r', 'c', 'o', 'p', 'o', 'l', 'o', 0xff};
     cheatseq_t cheat_mymap = new cheatseq_t(cheat_mymap_seq, 0);
     // mytired toggle mode
     private boolean dm_mymap = false;
@@ -281,7 +282,7 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
                 if (automapactive){
                   if (dm_mymap)
                     R.RenderPlayerView(players[displayplayer]);
-                  AM.Drawer();                                      
+                  AM.Drawer();
                 }
                 if (wipe || (!R.isFullHeight() && fullscreen) ||
                         (inhelpscreensstate && !inhelpscreens)
@@ -392,7 +393,7 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
         } while (!done);
 
     }
-    
+
     public boolean isMyMapCheat() {
         return dm_mymap;
     }
@@ -1128,12 +1129,12 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
 
         // Iff additonal PWAD files are used, print modified banner
 
-        if (modifiedgame)
+        /*if (modifiedgame)
             // Generate WAD loading alert. Abort upon denial.
             if (!I.GenerateAlert(Strings.MODIFIED_GAME_TITLE, Strings.MODIFIED_GAME_DIALOG)) {
                 W.CloseAllHandles();
                 System.exit(-2);
-            }
+            }*/
 
         // Check and print which version is executed.
         switch (getGameMode()) {
@@ -1924,7 +1925,7 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
                     }
                 return true; 
             } */
-                if (cheat_mymap.CheckCheat((char) ev.data1)) {                    
+                if (cheat_mymap.CheckCheat((char) ev.data1)) {
                     dm_mymap = !dm_mymap;
                     if(dm_mymap) {
                         players[0].message = String.format("Custom Map On!");
@@ -1957,6 +1958,8 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
                     mousebuttons(0, ev.data1 & 1);
                     mousebuttons(1, ev.data1 & 2);
                     mousebuttons(2, ev.data1 & 4);
+
+                    //System.out.println("presiono el mouse: "+ ev.data1);
                     
                     mousex = ev.data2 * (mouseSensitivity + 5) / 10;
                     mousey = ev.data3 * (mouseSensitivity + 5) / 10;
@@ -2640,11 +2643,7 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
     int d_episode;
     int d_map;
 
-    public void
-    DeferedInitNew
-            (Skill skill,
-             int episode,
-             int map) {
+    public void DeferedInitNew(Skill skill, int episode, int map) {
         d_skill = skill;
         d_episode = episode;
         d_map = map;
@@ -2665,8 +2664,10 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
         InitNew(d_skill, d_episode, d_map);
         gameaction = gameaction_t.ga_nothing;
     }
-
-
+    /**
+     * playing Horde Mode when hordemode = 1;
+     */
+    public int hordemode;
     /**
      * G_InitNew
      * Can be called by the startup code or the menu task,
@@ -2680,11 +2681,18 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
             paused = false;
             S.ResumeSound();
         }
-
-
+        System.out.println(skill);
+        // BJPR: horde mode.
+        if(skill == Skill.sk_horde){
+          skill = Skill.sk_hard;
+          hordemode = 1;
+        }
+        else {
+          hordemode = 0;
+        }
         if (skill.ordinal() > Skill.sk_nightmare.ordinal())
             skill = Skill.sk_nightmare;
-
+        
 
         // This was quite messy with SPECIAL and commented parts.
         // Supposedly hacks to make the latest edition work.

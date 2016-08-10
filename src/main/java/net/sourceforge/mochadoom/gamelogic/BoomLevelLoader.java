@@ -1,5 +1,25 @@
 package net.sourceforge.mochadoom.gamelogic;
 
+import static net.sourceforge.mochadoom.boom.Compatibility.prboom_2_compatibility;
+import static net.sourceforge.mochadoom.boom.E6Y.NO_INDEX;
+import static net.sourceforge.mochadoom.data.Defines.NF_SUBSECTOR;
+import static net.sourceforge.mochadoom.data.Defines.NF_SUBSECTOR_CLASSIC;
+import static net.sourceforge.mochadoom.data.Defines.PU_LEVEL;
+import static net.sourceforge.mochadoom.menu.BBox.BOXBOTTOM;
+import static net.sourceforge.mochadoom.menu.BBox.BOXLEFT;
+import static net.sourceforge.mochadoom.menu.BBox.BOXRIGHT;
+import static net.sourceforge.mochadoom.menu.BBox.BOXTOP;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
+import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
+import static net.sourceforge.mochadoom.rendering.line_t.ML_TWOSIDED;
+import static net.sourceforge.mochadoom.utils.C2JUtils.flags;
+import static net.sourceforge.mochadoom.utils.C2JUtils.unsigned;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
+
 import net.sourceforge.mochadoom.boom.DeepBSPNodesV4;
 import net.sourceforge.mochadoom.boom.MapGlVertex;
 import net.sourceforge.mochadoom.boom.MapNodeV4;
@@ -20,10 +40,6 @@ import net.sourceforge.mochadoom.data.mapvertex_t;
 import net.sourceforge.mochadoom.defines.Skill;
 import net.sourceforge.mochadoom.defines.SlopeType;
 import net.sourceforge.mochadoom.doom.DoomStatus;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 import net.sourceforge.mochadoom.menu.BBox;
 import net.sourceforge.mochadoom.menu.fixed_t;
 import net.sourceforge.mochadoom.rendering.RendererState;
@@ -40,21 +56,6 @@ import net.sourceforge.mochadoom.utils.C2JUtils;
 import net.sourceforge.mochadoom.wad.CacheableDoomObjectContainer;
 import net.sourceforge.mochadoom.wad.DoomBuffer;
 import net.sourceforge.mochadoom.wad.wadfile_info_t;
-
-import static net.sourceforge.mochadoom.boom.Compatibility.prboom_2_compatibility;
-import static net.sourceforge.mochadoom.boom.E6Y.NO_INDEX;
-import static net.sourceforge.mochadoom.data.Defines.NF_SUBSECTOR;
-import static net.sourceforge.mochadoom.data.Defines.NF_SUBSECTOR_CLASSIC;
-import static net.sourceforge.mochadoom.data.Defines.PU_LEVEL;
-import static net.sourceforge.mochadoom.menu.BBox.BOXBOTTOM;
-import static net.sourceforge.mochadoom.menu.BBox.BOXLEFT;
-import static net.sourceforge.mochadoom.menu.BBox.BOXRIGHT;
-import static net.sourceforge.mochadoom.menu.BBox.BOXTOP;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACBITS;
-import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
-import static net.sourceforge.mochadoom.rendering.line_t.ML_TWOSIDED;
-import static net.sourceforge.mochadoom.utils.C2JUtils.flags;
-import static net.sourceforge.mochadoom.utils.C2JUtils.unsigned;
 
 /*
  * Emacs style mode select -*- C++ -*-
@@ -1287,6 +1288,7 @@ public class BoomLevelLoader
             mobj = P.SpawnMapThing(mt/* , i */);
             if (mobj != null && mobj.info.speed == 0)
                 mobjlist[mobjcount++] = mobj;
+            
         }
 
         W.UnlockLumpNum(lump); // cph - release the data

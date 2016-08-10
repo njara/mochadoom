@@ -1,6 +1,7 @@
 package net.sourceforge.mochadoom.system;
 
 import java.io.IOException;
+
 import net.sourceforge.mochadoom.doom.CommandLine;
 import net.sourceforge.mochadoom.doom.DoomMain;
 import net.sourceforge.mochadoom.doom.ICommandLineManager;

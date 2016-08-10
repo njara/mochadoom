@@ -1,22 +1,5 @@
 package net.sourceforge.mochadoom.menu;
 
-import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
-import net.sourceforge.mochadoom.defines.GameState;
-import net.sourceforge.mochadoom.defines.Language;
-import net.sourceforge.mochadoom.defines.Skill;
-import net.sourceforge.mochadoom.doom.DoomStatus;
-import net.sourceforge.mochadoom.doom.English;
-import net.sourceforge.mochadoom.doom.event_t;
-import net.sourceforge.mochadoom.doom.evtype_t;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import net.sourceforge.mochadoom.rendering.patch_t;
-import net.sourceforge.mochadoom.utils.C2JUtils;
-import net.sourceforge.mochadoom.video.IVideoScale;
-import net.sourceforge.mochadoom.wad.DoomIO;
-
 import static net.sourceforge.mochadoom.data.Defines.HU_FONTSIZE;
 import static net.sourceforge.mochadoom.data.Defines.HU_FONTSTART;
 import static net.sourceforge.mochadoom.data.Defines.PU_CACHE;
@@ -59,6 +42,24 @@ import static net.sourceforge.mochadoom.game.Keys.KEY_LEFTARROW;
 import static net.sourceforge.mochadoom.game.Keys.KEY_MINUS;
 import static net.sourceforge.mochadoom.game.Keys.KEY_RIGHTARROW;
 import static net.sourceforge.mochadoom.game.Keys.KEY_UPARROW;
+
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
+import net.sourceforge.mochadoom.defines.GameState;
+import net.sourceforge.mochadoom.defines.Language;
+import net.sourceforge.mochadoom.defines.Skill;
+import net.sourceforge.mochadoom.doom.DoomStatus;
+import net.sourceforge.mochadoom.doom.English;
+import net.sourceforge.mochadoom.doom.event_t;
+import net.sourceforge.mochadoom.doom.evtype_t;
+import net.sourceforge.mochadoom.rendering.patch_t;
+import net.sourceforge.mochadoom.utils.C2JUtils;
+import net.sourceforge.mochadoom.video.IVideoScale;
+import net.sourceforge.mochadoom.wad.DoomIO;
 
 public class Menu extends AbstractDoomMenu {
 
@@ -337,6 +338,7 @@ public class Menu extends AbstractDoomMenu {
                         new menuitem_t(1, "M_ROUGH", ChooseSkill, 'h'),
                         new menuitem_t(1, "M_HURT", ChooseSkill, 'h'),
                         new menuitem_t(1, "M_ULTRA", ChooseSkill, 'u'),
+                        new menuitem_t(1, "M_HRDM", ChooseSkill, 'h') , 
                         new menuitem_t(1, "M_NMARE", ChooseSkill, 'n')};
 
         NewDef = new menu_t(newg_end, // # of menu items
@@ -1592,13 +1594,14 @@ public class Menu extends AbstractDoomMenu {
 
     class M_DrawOptions
             implements DrawRoutine {
-
+      
         private String detailNames[] = {"M_GDHIGH", "M_GDLOW"};
 
         private String msgNames[] = {"M_MSGOFF", "M_MSGON"};
 
         @Override
         public void invoke() {
+
             V.DrawScaledPatch(108, 15, 0, vs, W.CachePatchName("M_OPTTTL"));
 
             V.DrawScaledPatch(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT
@@ -1764,7 +1767,6 @@ public class Menu extends AbstractDoomMenu {
                 StartMessage(NIGHTMARE, VerifyNightmare, true);
                 return;
             }
-
             DG.DeferedInitNew(Skill.values()[choice], epi + 1, 1);
             ClearMenus();
         }
@@ -1921,7 +1923,7 @@ public class Menu extends AbstractDoomMenu {
      * newgame_e enum;
      */
     public static final int killthings = 0, toorough = 1, hurtme = 2, violence = 3,
-            nightmare = 4, newg_end = 5;
+            nightmare = 5, horde = 4, newg_end = 6;
 
     private static final String[] gammamsg = {"GAMMALVL0",
 

@@ -590,12 +590,11 @@ public class WadLoader implements IWadLoader {
     /* (non-Javadoc)
       * @see w.IWadLoader#GetNumForName(java.lang.String)
       */
-
     public int GetNumForName(String name) {
         int i;
 
         i = CheckNumForName(name.toUpperCase());
-
+        
         if (i == -1) {
             Exception e = new Exception();
             e.printStackTrace();
