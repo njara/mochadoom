@@ -133,6 +133,7 @@ public class player_t /*extends mobj_t */
         this.mo.player = this;
         readyweapon = weapontype_t.wp_fist;
         this.cmd = new ticcmd_t();
+        this.berserkmode = false;
         //weaponinfo=new weaponinfo_t();
     }
 
@@ -280,6 +281,9 @@ public class player_t /*extends mobj_t */
 
     // True if secret level has been done.
     public boolean didsecret;
+    
+    //True if Berserk mode is active
+    public boolean berserkmode;
 
     /**
      * It's probably faster to clone the null player
@@ -1037,8 +1041,9 @@ public class player_t /*extends mobj_t */
                 mo.angle += ANG5;
             else
                 mo.angle -= ANG5;
-        } else if (damagecount != 0)
+        } else if (damagecount != 0) 
             damagecount--;
+            
 
 
         if (flags(cmd.buttons, BT_USE))

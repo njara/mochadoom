@@ -2296,6 +2296,11 @@ public class Actions extends UnifiedGameMap {
 
         // player specific
         if (player != null) {
+            
+            if (player.berserkmode && ((mobjinfo[source.type.ordinal()]).getType()).equals("MT_ZOMBIE")) {
+                return;
+            }
+          
             // end of game hell hack
             if (target.subsector.sector.special == 11
                     && damage >= target.health) {
