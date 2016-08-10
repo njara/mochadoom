@@ -10,12 +10,14 @@ import net.sourceforge.mochadoom.defines.Skill;
 import net.sourceforge.mochadoom.defines.StateNum;
 import net.sourceforge.mochadoom.system.DoomStatusAware;
 import net.sourceforge.mochadoom.system.IDoomSystem;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+
 import net.sourceforge.mochadoom.menu.IRandom;
 import net.sourceforge.mochadoom.gamelogic.Actions;
 import net.sourceforge.mochadoom.gamelogic.mobj_t;
@@ -166,7 +168,7 @@ public class player_t /*extends mobj_t */
      * playerstate_t
      */
     public int playerstate;
-    
+
     // number of times player has revived.
     public int countrevivals;
 
@@ -240,9 +242,6 @@ public class player_t /*extends mobj_t */
     public int[] maxammo;
 
 
-
-
-
     // damage over time
 
     private boolean damageOverTime;
@@ -251,9 +250,6 @@ public class player_t /*extends mobj_t */
     private int damage;
     private int damageFreq;
     private long lastDamage;
-
-
-
 
 
     /**
@@ -311,11 +307,12 @@ public class player_t /*extends mobj_t */
     public boolean didsecret;
 
     // BJPR: poison variables
-    
+
     private boolean poisoned;
     private int poisonDamage;
     private int poisonFreq;
     private long lastPoisonDamage;
+
     /**
      * It's probably faster to clone the null player
      */
@@ -355,27 +352,28 @@ public class player_t /*extends mobj_t */
             throws CloneNotSupportedException {
         return (player_t) super.clone();
     }
-    
+
     /**
      * gameSkill is the variable that indicates the skill/level of the actual game.
      */
     private Skill gameSkill;
-    
+
     /**
      * Sets the gameSkill.
+     *
      * @param skill the actual skill of the game.
      */
     public void setGameSkill(Skill skill) {
-      gameSkill = skill;
-      setMaxTired(skill);
-      setWaitTired(skill);
+        gameSkill = skill;
+        setMaxTired(skill);
+        setWaitTired(skill);
     }
-    
+
     /**
      * Updates the actual game's skill.
      */
     public void updateGameSkill() {
-      setGameSkill(DS.gameskill);
+        setGameSkill(DS.gameskill);
     }
 
     /**
@@ -400,138 +398,152 @@ public class player_t /*extends mobj_t */
 
     /**
      * Returns true if the player is running.
+     *
      * @param fm the forwardmove.
      * @return true if the player is running.
      */
     public boolean isRunning(byte fm) {
-      // Based on the forwardmove array in DoomStatus.
-      if((fm == DS.MAXPLMOVE()) || (fm == -DS.MAXPLMOVE())) {
-        return true;
-      } else {
-        return false;
-      }
+        // Based on the forwardmove array in DoomStatus.
+        if ((fm == DS.MAXPLMOVE()) || (fm == -DS.MAXPLMOVE())) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    
+
     /* The maximum tired that could be the player */
     private int maxTired;
-    
+
     /**
      * Returns the maxTired variable.
+     *
      * @return maxTired variable.
      */
     public int getMaxTired() {
-      return maxTired;
+        return maxTired;
     }
-    
+
     /**
      * Sets the variable maxTired according to the given
      * skill of the game.
+     *
      * @param skill
      */
     private void setMaxTired(Skill skill) {
-      switch (skill) {
-        case sk_baby:
-          maxTired = 500;
-          break;
-        case sk_easy:
-          maxTired = 300;
-          break;
-        case sk_medium:
-          maxTired = 150;
-          break;
-        case sk_hard:
-          maxTired = 100;
-          break;
-        case sk_nightmare:
-          maxTired = 50;
-          break;
-      }
+        switch (skill) {
+            case sk_baby:
+                maxTired = 500;
+                break;
+            case sk_easy:
+                maxTired = 300;
+                break;
+            case sk_medium:
+                maxTired = 150;
+                break;
+            case sk_hard:
+                maxTired = 100;
+                break;
+            case sk_nightmare:
+                maxTired = 50;
+                break;
+        }
     }
-    
+
     /* How tired is the player now */
     private static int tired = 0;
-    
+
     /**
      * Returns how tired is the player.
+     *
      * @return the tired variable.
      */
     public int getTired() {
-      return tired;
+        return tired;
     }
-    
+
     /* The last time when the player was tired */
     private static long lastTimeTired = 0;
     /* Wait time to begin to decrese the tired variable */
     private long waitTired;
-    
+
     /**
      * Sets the waitTired variable according to the skill of
      * the level.
+     *
      * @param skill the actual game's skill.
      */
     public void setWaitTired(Skill skill) {
-      switch (skill) {
-        case sk_baby:
-          waitTired = 0;
-          break;
-        case sk_easy:
-          waitTired = 2000;
-          break;
-        case sk_medium:
-          waitTired = 5000;
-          break;
-        case sk_hard:
-          waitTired = 7500;
-          break;
-        case sk_nightmare:
-          waitTired = 10000;
-          break;
-      }
+        switch (skill) {
+            case sk_baby:
+                waitTired = 0;
+                break;
+            case sk_easy:
+                waitTired = 2000;
+                break;
+            case sk_medium:
+                waitTired = 5000;
+                break;
+            case sk_hard:
+                waitTired = 7500;
+                break;
+            case sk_nightmare:
+                waitTired = 10000;
+                break;
+        }
     }
-    
+
     /**
      * Fatigues the player. Increase the tired variable that indicates how tire
      * is the player.
      */
     private void fatigue() {
-      tired++;
-      if (tired == maxTired) {
-        lastTimeTired = System.currentTimeMillis();
-      }
+        tired++;
+        if (tired == maxTired) {
+            lastTimeTired = System.currentTimeMillis();
+        }
     }
-    
+
     /**
      * Rest the player. Decrease the tired variable that indicates how tire
      * is the player.
      */
     private void rest() {
-      if (tired>0) {
-        long actualTime = System.currentTimeMillis();
-        // It decrease only if the player has waited the time to begin to rest.
-        if ((actualTime - lastTimeTired)>waitTired) {
-          tired--;
+        if (tired > 0) {
+            long actualTime = System.currentTimeMillis();
+            // It decrease only if the player has waited the time to begin to rest.
+            if ((actualTime - lastTimeTired) > waitTired) {
+                tired--;
+            }
         }
-      }
     }
-    
+
     /**
      * Returns true if the player is not tired and can run.
+     *
      * @return true if the player can run.
      */
     private boolean canRun() {
-      if (tired < maxTired) {
-        return true;
-      } else {
-        return false;
-      }
+        if (tired < maxTired) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    
+
+    public void MoveBackwards() {
+        ticcmd_t cmd = this.cmd;
+        mo.angle += (cmd.angleturn << 16);
+        mo.angle &= BITS32;
+        Thrust(mo.angle, -DS.SLOWPLMOVE() * PLAYERTHRUST * 20);
+
+    }
+
     /**
      * P_MovePlayer
      * Method that allows to move the player.
      */
     public void MovePlayer() {
-      
+
         ticcmd_t cmd = this.cmd;
 
         mo.angle += (cmd.angleturn << 16);
@@ -542,22 +554,22 @@ public class player_t /*extends mobj_t */
         onground = (mo.z <= mo.floorz);
         
         /* Check if the player is running and fatigue him if he is. */
-        if(isRunning(cmd.forwardmove) && canRun()) {
-          fatigue();
+        if (isRunning(cmd.forwardmove) && canRun()) {
+            fatigue();
         } else {
-          rest();
+            rest();
         }
-        
+
         if (cmd.forwardmove != 0 && onground) {
-          if (canRun()) {
-            Thrust(mo.angle, cmd.forwardmove * PLAYERTHRUST);
-          } else {
-            if(cmd.forwardmove > 0) {
-              Thrust(mo.angle, DS.SLOWPLMOVE() * PLAYERTHRUST);
+            if (canRun()) {
+                Thrust(mo.angle, cmd.forwardmove * PLAYERTHRUST);
             } else {
-              Thrust(mo.angle, -DS.SLOWPLMOVE() * PLAYERTHRUST);
+                if (cmd.forwardmove > 0) {
+                    Thrust(mo.angle, DS.SLOWPLMOVE() * PLAYERTHRUST);
+                } else {
+                    Thrust(mo.angle, -DS.SLOWPLMOVE() * PLAYERTHRUST);
+                }
             }
-          }
         }
 
         if (cmd.sidemove != 0 && onground)
@@ -872,30 +884,34 @@ public class player_t /*extends mobj_t */
         powers[power] = 1;
         return true;
     }
+
     /**
      * poisonPlayer , this sets the poison effect in player.
-     * @param poison type of poison.
+     *
+     * @param poison    type of poison.
      * @param frequency Damage frequency of poison.
      */
-    public void poisonPlayer(int poison, int frequency){
-      this.poisoned = true;
-      this.poisonDamage = poison;
-      this.poisonFreq = frequency;
-      this.lastPoisonDamage = System.currentTimeMillis();
-    }
-    /**
-     * PickedMedikit. recovers poison damage.
-     * @param poison type of poison.
-     */
-    public void PickedMedikit(int poison){
-      if(poison >= this.poisonDamage){
-        this.poisonDamage = 0;
-        this.poisonFreq = 0;
-        this.poisoned = false;
-      }
+    public void poisonPlayer(int poison, int frequency) {
+        this.poisoned = true;
+        this.poisonDamage = poison;
+        this.poisonFreq = frequency;
+        this.lastPoisonDamage = System.currentTimeMillis();
     }
 
-    public void damagePlayerOverTime(int poison, int frequency, int amount){
+    /**
+     * PickedMedikit. recovers poison damage.
+     *
+     * @param poison type of poison.
+     */
+    public void PickedMedikit(int poison) {
+        if (poison >= this.poisonDamage) {
+            this.poisonDamage = 0;
+            this.poisonFreq = 0;
+            this.poisoned = false;
+        }
+    }
+
+    public void damagePlayerOverTime(int poison, int frequency, int amount) {
         this.damageOverTime = true;
         this.damageOverTimeCount = 0;
         this.damageOverTimeAmount = amount;
@@ -903,7 +919,6 @@ public class player_t /*extends mobj_t */
         this.damageFreq = frequency;
         this.lastDamage = System.currentTimeMillis();
     }
-
 
 
     /**
@@ -930,15 +945,13 @@ public class player_t /*extends mobj_t */
      */
 
     // Function to damage the player when using some Weapons
-    public void DamagePlayer(int n){
+    public void DamagePlayer(int n) {
 
         this.mo.health = this.mo.health - n;    // health
-        if (this.mo.health <= 0 ){
+        if (this.mo.health <= 0) {
             this.health[0] = 0;
             this.playerstate = PST_DEAD;
-        }
-
-        else {
+        } else {
             this.health[0] = this.mo.health;        // health UI label
         }
 
@@ -1192,12 +1205,12 @@ public class player_t /*extends mobj_t */
                 if (psp.state == null)
                     break;
             }
-            
-            if( nextstate != null )
-            	newstate = nextstate;
+
+            if (nextstate != null)
+                newstate = nextstate;
             else
-            	newstate = psp.state.nextstate;
-            
+                newstate = psp.state.nextstate;
+
         } while (psp.tics == 0);
         // an initial state of 0 could cycle through
     }
@@ -1377,7 +1390,7 @@ public class player_t /*extends mobj_t */
         do {
             if (weaponowned[weapontype_t.wp_plasma.ordinal()]
                     && (this.ammo[AmmoType.am_cell.ordinal()] != 0)
-                    /*&& !DS.isShareware()*/ ) {
+                    /*&& !DS.isShareware()*/) {
                 pendingweapon = weapontype_t.wp_plasma;
             } else if (weaponowned[weapontype_t.wp_supershotgun.ordinal()]
                     && this.ammo[AmmoType.am_shell.ordinal()] > 2
@@ -1398,7 +1411,7 @@ public class player_t /*extends mobj_t */
                 pendingweapon = weapontype_t.wp_missile;
             } else if (weaponowned[weapontype_t.wp_bfg.ordinal()]
                     && this.ammo[AmmoType.am_cell.ordinal()] > 40
-                    /*&& !DS.isShareware()*/ ) {
+                    /*&& !DS.isShareware()*/) {
                 pendingweapon = weapontype_t.wp_bfg;
             } else {
                 // If everything fails.
@@ -1524,7 +1537,7 @@ public class player_t /*extends mobj_t */
                     && newweapon != player.readyweapon) {
                 // Do not go to plasma or BFG in shareware,
                 //  even if cheated.
-                if ( true/*(newweapon != weapontype_t.wp_plasma
+                if (true/*(newweapon != weapontype_t.wp_plasma
                         && newweapon != weapontype_t.wp_bfg)
                         || !DS.isShareware() */) {
                     player.pendingweapon = newweapon;
@@ -1570,32 +1583,23 @@ public class player_t /*extends mobj_t */
             player.bonuscount--;
 
 
-
-
-
-
         // apply the damage over time
 
-        if(player.damageOverTime && System.currentTimeMillis() - player.lastDamage > player.damageFreq){
+        if (player.damageOverTime && System.currentTimeMillis() - player.lastDamage > player.damageFreq) {
             player.lastDamage = System.currentTimeMillis();
             int newHealth = player.health[0] - player.damage;
 
             player.damageOverTimeCount += player.damage;
-            if(player.damageOverTimeCount == player.damageOverTimeAmount) {
+            if (player.damageOverTimeCount == player.damageOverTimeAmount) {
 
                 player.damageOverTime = false;
 
             }
-            player.health[0] = newHealth > 0? newHealth: 0;
-            if(player.health[0] <= 0){
+            player.health[0] = newHealth > 0 ? newHealth : 0;
+            if (player.health[0] <= 0) {
                 player.playerstate = PST_DEAD;
             }
         }
-
-
-
-
-
 
 
         // Handling colormaps.
@@ -1614,13 +1618,13 @@ public class player_t /*extends mobj_t */
                 player.fixedcolormap = 0;
         } else
             player.fixedcolormap = 0;
-        
-     // BJPR: apply poison damage
-        if(player.poisoned && System.currentTimeMillis() - player.lastPoisonDamage > player.poisonFreq){
-              player.lastPoisonDamage = System.currentTimeMillis();
+
+        // BJPR: apply poison damage
+        if (player.poisoned && System.currentTimeMillis() - player.lastPoisonDamage > player.poisonFreq) {
+            player.lastPoisonDamage = System.currentTimeMillis();
             int newHealth = player.health[0] - player.poisonDamage;
-            player.health[0] = newHealth > 0? newHealth: 0;
-            if(player.health[0] == 0){
+            player.health[0] = newHealth > 0 ? newHealth : 0;
+            if (player.health[0] == 0) {
                 player.playerstate = PST_DEAD;
             }
         }
@@ -1638,7 +1642,7 @@ public class player_t /*extends mobj_t */
         int killcount;
         int itemcount;
         int secretcount;
-        
+
         // System.arraycopy(players[player].frags, 0, frags, 0, frags.length);
         // We save the player's frags here...
         C2JUtils.memcpy(frags, this.frags, frags.length);
