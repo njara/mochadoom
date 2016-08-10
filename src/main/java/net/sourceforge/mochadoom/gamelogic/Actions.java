@@ -2341,8 +2341,8 @@ public class Actions extends UnifiedGameMap {
             //System.out.println("its acid");
             return;
         }
-
-        if (inflictor.type == mobjtype_t.MT_ALTERNATEPLASMA) {
+        
+        if (inflictor != null && inflictor.type == mobjtype_t.MT_ALTERNATEPLASMA) {
             // si tiene velocidad es monstruo
             // BJPR: luego deberia ser target.isMonster()
             if (target.info.speed > 0) {
@@ -2364,7 +2364,7 @@ public class Actions extends UnifiedGameMap {
         if ((player != null) && DM.gameskill == Skill.sk_baby)
             damage >>= 1;   // take half damage in trainer mode
 
-        if (source.info.getType().equals("MT_ZOMBIE") && player != null) {
+        if (source != null && source.info.getType().equals("MT_ZOMBIE") && player != null) {
             switch (source.type) {
                 case MT_GREENZOMBIE:
                     player.poisonPlayer(1, 3000);
