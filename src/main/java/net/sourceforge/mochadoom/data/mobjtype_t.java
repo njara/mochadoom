@@ -144,6 +144,7 @@ public enum mobjtype_t {
     MT_GRAYZOMBIE,
     MT_BLACKZOMBIE,
     MT_FLARE,
+    MT_BERSERKMEDIKIT,
     NUMMOBJTYPES
 };
 

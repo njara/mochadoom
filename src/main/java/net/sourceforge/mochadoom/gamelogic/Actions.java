@@ -2426,7 +2426,7 @@ public class Actions extends UnifiedGameMap {
                 damage = target.health - 1;
             }
             
-            if (player.berserkmode && ((mobjinfo[source.type.ordinal()]).getType()).equals("MT_ZOMBIE")) {
+            if (source != null && player.berserkmode && ((mobjinfo[source.type.ordinal()]).getType()).equals("MT_ZOMBIE")) {
               return;
             }
 
@@ -2600,6 +2600,13 @@ public class Actions extends UnifiedGameMap {
 
             case MT_CHAINGUY:
                 item = mobjtype_t.MT_CHAINGUN;
+                break;
+                
+            case MT_GREENZOMBIE:
+            case MT_REDZOMBIE:
+            case MT_GRAYZOMBIE:
+            case MT_BLACKZOMBIE:
+                item = mobjtype_t.MT_BERSERKMEDIKIT;
                 break;
 
             default:

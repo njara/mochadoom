@@ -18,6 +18,7 @@ import static net.sourceforge.mochadoom.menu.fixed_t.FRACUNIT;
 import net.sourceforge.mochadoom.data.sounds.sfxenum_t;
 import net.sourceforge.mochadoom.data.mobjinfo.AlternatePlasma_t;
 import net.sourceforge.mochadoom.data.mobjinfo.Baby_t;
+import net.sourceforge.mochadoom.data.mobjinfo.BerserkMedikit_t;
 import net.sourceforge.mochadoom.data.mobjinfo.BlackZombie_t;
 import net.sourceforge.mochadoom.data.mobjinfo.BossBrain_t;
 import net.sourceforge.mochadoom.data.mobjinfo.Bruiser_t;
@@ -4186,7 +4187,32 @@ public class info {
             new RedZombie_t(),
             new GrayZombie_t(),
             new BlackZombie_t(),
-			new Flare_t()
+			new Flare_t(),
+			new BerserkMedikit_t(        // MT_MISC11 MEDIKIT
+          2012,        // doomednum
+          StateNum.S_MEDI,        // spawnstate
+          1000,        // spawnhealth
+          StateNum.S_NULL,        // seestate
+          sfxenum_t.sfx_None,        // seesound
+          8,        // reactiontime
+          sfxenum_t.sfx_None,        // attacksound
+          StateNum.S_NULL,        // painstate
+          0,        // painchance
+          sfxenum_t.sfx_None,        // painsound
+          StateNum.S_NULL,        // meleestate
+          StateNum.S_NULL,        // missilestate
+          StateNum.S_NULL,        // deathstate
+          StateNum.S_NULL,        // xdeathstate
+          sfxenum_t.sfx_None,        // deathsound
+          0,        // speed
+          20 * FRACUNIT,        // radius
+          16 * FRACUNIT,        // height
+          100,        // mass
+          0,        // damage
+          sfxenum_t.sfx_None,        // activesound
+          MF_SPECIAL,        // flags
+          StateNum.S_NULL        // raisestate
+			    )
     };
 
     static {

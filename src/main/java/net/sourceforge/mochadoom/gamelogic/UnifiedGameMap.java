@@ -2172,14 +2172,18 @@ public abstract class UnifiedGameMap implements ThinkerList, DoomStatusAware {
                 break;
 
             case SPR_MEDI:
-                player.PickedMedikit(3); // BJPR: normal medikit
-                if (!player.GiveBody(25))
-                    return;
+                if (special.type == mobjtype_t.MT_BERSERKMEDIKIT) {
+                  player.berserkmode = true;
+                }else{
+                  player.PickedMedikit(3); // BJPR: normal medikit
+                  if (!player.GiveBody(25))
+                      return;
 
-                if (player.health[0] < 25)
-                    player.message = GOTMEDINEED;
-                else
-                    player.message = GOTMEDIKIT;
+                  if (player.health[0] < 25)
+                      player.message = GOTMEDINEED;
+                  else
+                      player.message = GOTMEDIKIT;
+                }                
                 break;
 
             // power ups
