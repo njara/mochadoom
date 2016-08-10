@@ -227,7 +227,7 @@ public class ActionFunctions implements DoomStatusAware {
     ActionType2 Saw;
     ActionType2 SawAlternate;
     ActionType2 FirePlasma;
-    ActionType2 FirePlasma2;	// secundario plasma
+    ActionType2 FirePlasma2;    // secundario plasma
     ActionType2 BFGsound;
     ActionType2 FireBFG;
     ActionType2 FireBFGAltern;
@@ -304,7 +304,7 @@ public class ActionFunctions implements DoomStatusAware {
      */
 
     public void doWireState(state_t st) {
-      //  System.out.println("Dispatching: "+st.action);
+        //  System.out.println("Dispatching: "+st.action);
         if (st.action == null) return;
         switch (st.action) {
             case P_MobjThinker:
@@ -327,7 +327,7 @@ public class ActionFunctions implements DoomStatusAware {
                 break;
             case A_RaiseLittle:
                 st.acp2 = RaiseLittle;
-                break;    
+                break;
             case A_Punch:
                 st.acp2 = Punch;
                 break;
@@ -341,12 +341,12 @@ public class ActionFunctions implements DoomStatusAware {
                 st.acp2 = FirePistol;
                 break;
             case A_FirePistolAlternate:
-            	st.acp2 = FirePistolAlternate;
-            	break;
+                st.acp2 = FirePistolAlternate;
+                break;
             //Code.107 Se agrega el caso de disparo de example
             case A_FireExample:
-            	st.acp2 = FireExample;
-            	break;
+                st.acp2 = FireExample;
+                break;
             case A_Light1:
                 st.acp2 = Light1;
                 break;
@@ -390,12 +390,12 @@ public class ActionFunctions implements DoomStatusAware {
                 st.acp2 = Saw;
                 break;
             case A_SawAlternate:
-            	st.acp2 = SawAlternate;
-            	break;
+                st.acp2 = SawAlternate;
+                break;
             case A_FirePlasma:
                 st.acp2 = FirePlasma;
                 break;
-            case A_FirePlasmaAlternate:	//secundario plasma gun
+            case A_FirePlasmaAlternate:    //secundario plasma gun
                 st.acp2 = FirePlasma2;
                 break;
             case A_BFGsound:
@@ -639,12 +639,12 @@ public class ActionFunctions implements DoomStatusAware {
                 st.acp2 = FirePistol;
                 break;
             case A_FirePistolAlternate:
-            	st.acp2 = FirePistolAlternate;
-            	break;
+                st.acp2 = FirePistolAlternate;
+                break;
             //Code.108 Se agrega el caso de disparo de example
             case A_FireExample:
-            	st.acp2 = FireExample;
-            	break;
+                st.acp2 = FireExample;
+                break;
             case A_Light1:
                 st.acp2 = Light1;
                 break;
@@ -1273,12 +1273,11 @@ public class ActionFunctions implements DoomStatusAware {
 
             A_FaceTarget(actor);
             if (EN.CheckMeleeRange(actor)) {
-              // BJPR: LETAAAL
-                if(actor.type == mobjtype_t.MT_BLACKZOMBIE){
-                  damage = 300;
-                }
-                else{
-                  damage = ((RND.P_Random() % 10) + 1) * 4;
+                // BJPR: LETAAAL
+                if (actor.type == mobjtype_t.MT_BLACKZOMBIE) {
+                    damage = 300;
+                } else {
+                    damage = ((RND.P_Random() % 10) + 1) * 4;
                 }
                 A.DamageMobj(actor.target, actor, actor, damage);
             }
@@ -1570,7 +1569,7 @@ public class ActionFunctions implements DoomStatusAware {
             A.P_GunShot(player.mo, !eval(player.refire));
         }
     }
-    
+
     //
     // A_FirePistolAlternate
     //
@@ -1601,42 +1600,45 @@ public class ActionFunctions implements DoomStatusAware {
             A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_FLARE);
         }
     }
-    
+
     //
     // Code.104 implementacion ejemplo disparo secundario
     // A_FireExample
     //
     class A_FireExample implements ActionType2 {
         public void invoke(player_t player, pspdef_t psp) {
-        	  int i;
-              long angle;
-              int damage;
+            int i;
+            long angle;
+            int damage;
 
+            player.MoveBackwards();
+            S.StartSound(player.mo, sfxenum_t.sfx_shotgn);
+            player.mo.SetMobjState(StateNum.S_PLAY_ATK2);
 
-              S.StartSound(player.mo, sfxenum_t.sfx_shotgn);
-              player.mo.SetMobjState(StateNum.S_PLAY_ATK2);
+            if (player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()] - 2 <= 0) {
+                player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()] = 0;
+            } else {
+                player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()] -= 2;
+            }
+            player.SetPsprite(
+                    ps_flash,
+                    weaponinfo[player.readyweapon.ordinal()].flashstate,
+                    null);
 
-              player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()] -= 2;
+            A.P_BulletSlope(player.mo);
 
-              player.SetPsprite(
-                      ps_flash,
-                      weaponinfo[player.readyweapon.ordinal()].flashstate,
-                      null);
-
-              A.P_BulletSlope(player.mo);
-
-              for (i = 0; i < 20; i++) {
-                  damage = 5 * (RND.P_Random() % 3 + 1);
-                  angle = player.mo.angle;
-                  angle += (RND.P_Random() - RND.P_Random()) << 19;
-                  A.LineAttack(player.mo,
-                          angle,
-                          MISSILERANGE,
-                          A.bulletslope + ((RND.P_Random() - RND.P_Random()) << 5), damage);
-              }
-          }
+            for (i = 0; i < 20; i++) {
+                damage = 5 * (RND.P_Random() % 3 + 1);
+                angle = player.mo.angle;
+                angle += (RND.P_Random() - RND.P_Random()) << 19;
+                A.LineAttack(player.mo,
+                        angle,
+                        MISSILERANGE,
+                        A.bulletslope + ((RND.P_Random() - RND.P_Random()) << 5), damage);
+            }
+        }
     }
-    
+
     //
     // A_FireShotgun
     //
@@ -2054,9 +2056,7 @@ public class ActionFunctions implements DoomStatusAware {
                     EN.FireWeapon(player);
                     return;
                 }
-            }
-            
-            else if (eval(player.cmd.buttons & BT_ALTERN)) {
+            } else if (eval(player.cmd.buttons & BT_ALTERN)) {
                 if (!player.attackdown
                         || (player.readyweapon != weapontype_t.wp_missile
                         && player.readyweapon != weapontype_t.wp_bfg)) {
@@ -2064,10 +2064,7 @@ public class ActionFunctions implements DoomStatusAware {
                     EN.AlternateFire(player);
                     return;
                 }
-            } 
-            
-            
-            else
+            } else
                 player.attackdown = false;
 
             // bob the weapon based on movement speed
@@ -2104,7 +2101,7 @@ public class ActionFunctions implements DoomStatusAware {
             player.SetPsprite(ps_weapon, newstate, null);
         }
     }
-    
+
     //
     // A_RaiseLittle
     //
@@ -2113,6 +2110,7 @@ public class ActionFunctions implements DoomStatusAware {
             StateNum newstate;
 
             psp.sy = WEAPONTOP - 60*FRACUNIT;
+
         }
     }
 
@@ -2133,16 +2131,12 @@ public class ActionFunctions implements DoomStatusAware {
                     && eval(player.health[0])) {
                 player.refire++;
                 EN.FireWeapon(player);
-            }
-            
-            else if (eval(player.cmd.buttons & BT_ALTERN)
+            } else if (eval(player.cmd.buttons & BT_ALTERN)
                     && player.pendingweapon == weapontype_t.wp_nochange
                     && eval(player.health[0])) {
                 player.refire++;
                 EN.AlternateFire(player);
-            }
-            
-            else {
+            } else {
                 player.refire = 0;
                 player.CheckAmmo();
             }
@@ -2192,7 +2186,7 @@ public class ActionFunctions implements DoomStatusAware {
             }
         }
     }
-    
+
     //
     // A_PunchAlternate
     //
@@ -2277,7 +2271,7 @@ public class ActionFunctions implements DoomStatusAware {
             player.mo.flags |= MF_JUSTATTACKED;
         }
     }
-    
+
     //
     // A_SawAlternate
     //
@@ -2329,30 +2323,30 @@ public class ActionFunctions implements DoomStatusAware {
         }
     }
 
-    
+
     //
     // A_FireMissile
     //
     static int ADDED_MISSILES = 0;
-    
+
     class A_FireMissile implements ActionType2 {
-    	
-    	
+
+
         public void invoke(player_t player, pspdef_t psp) {
             player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()]--;
             A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_ROCKET);
-            
-            if( ADDED_MISSILES > 0 ){
-            	ADDED_MISSILES--;
-            	
-            	player.SetPsprite(
-            			ps_weapon,
-            			StateNum.S_MISSILE1,
-            			StateNum.S_MISSILE1);
+
+            if (ADDED_MISSILES > 0) {
+                ADDED_MISSILES--;
+
+                player.SetPsprite(
+                        ps_weapon,
+                        StateNum.S_MISSILE1,
+                        StateNum.S_MISSILE1);
             }
         }
     }
-    
+
     //
     // A_FireMissileAltern
     //
@@ -2395,6 +2389,7 @@ public class ActionFunctions implements DoomStatusAware {
 
 
             for(bfgcount = -1000000000; bfgcount<=1000000000; bfgcount+=200000000){
+
                 A.SpawnPlayerMissileWithAngle(player.mo, mobjtype_t.MT_BFG, playerPosition + bfgcount);
             }
             // HERE DAMAGE THE PLAYER
@@ -2430,16 +2425,16 @@ public class ActionFunctions implements DoomStatusAware {
             // needed a clear rewrite, as it was way too messy.
             // We know that the flash states are a certain amount away from 
             // the firing states. This amount is two frames.
-            player.SetPsprite(ps_flash, 
-            		StateNum.values()[flashstate + current_state - StateNum.S_CHAIN1.ordinal()],
-            		null);
+            player.SetPsprite(ps_flash,
+                    StateNum.values()[flashstate + current_state - StateNum.S_CHAIN1.ordinal()],
+                    null);
 
             A.P_BulletSlope(player.mo);
 
             A.P_GunShot(player.mo, !eval(player.refire));
         }
     }
-    
+
     //
     // A_FireCGunAltern
     //
@@ -2472,13 +2467,14 @@ public class ActionFunctions implements DoomStatusAware {
             // We know that the flash states are a certain amount away from
             // the firing states. This amount is two frames.
             player.SetPsprite(ps_flash,
-            		StateNum.values()[flashstate + current_state - StateNum.S_CHAIN4.ordinal()-1], null );
+                    StateNum.values()[flashstate + current_state - StateNum.S_CHAIN4.ordinal() - 1], null);
 
             A.P_BulletSlope(player.mo);
 
             A.P_GunShot(player.mo, !eval(player.refire));
         }
     }
+
     //
     // A_FirePlasma
     //
@@ -2494,11 +2490,12 @@ public class ActionFunctions implements DoomStatusAware {
             A.SpawnPlayerMissile(player.mo, mobjtype_t.MT_PLASMA);
         }
     }
+
     // Secundario de A_FirePlasma
     class A_FirePlasmaAlternate implements ActionType2 {
         public void invoke(player_t player, pspdef_t psp) {
-           player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()]--;
-            
+            player.ammo[weaponinfo[player.readyweapon.ordinal()].ammo.ordinal()]--;
+
             System.out.println("PlasmaAlternate");
 
             player.SetPsprite(
@@ -2905,7 +2902,7 @@ public class ActionFunctions implements DoomStatusAware {
             // so change the weapon and start raising it
             if (!eval(player.health[0])) {
                 // Player is dead, so keep the weapon off screen.
-                player.SetPsprite(ps_weapon, StateNum.S_NULL, null );
+                player.SetPsprite(ps_weapon, StateNum.S_NULL, null);
                 return;
             }
 
@@ -2914,10 +2911,11 @@ public class ActionFunctions implements DoomStatusAware {
             player.BringUpWeapon();
         }
     }
-    
-    
+
+
     class A_LowerLittle implements ActionType2 {
         public void invoke(player_t player, pspdef_t psp) {
+
 
             psp.sy += 100*FRACUNIT;
             
