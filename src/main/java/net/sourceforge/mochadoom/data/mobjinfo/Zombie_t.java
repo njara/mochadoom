@@ -20,4 +20,9 @@ public abstract class Zombie_t extends Monster_t{
   public String getType(){
     return "MT_ZOMBIE";
   }
+  
+  @Override
+  public boolean isZombie(){
+    return true;
+  }
 }

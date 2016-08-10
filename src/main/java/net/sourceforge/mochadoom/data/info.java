@@ -4185,7 +4185,7 @@ public class info {
             new RedZombie_t(),
             new GrayZombie_t(),
             new BlackZombie_t(),
-			new Flare_t()
+            new Flare_t()
     };
 
     static {

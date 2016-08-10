@@ -1580,7 +1580,6 @@ public class Actions extends UnifiedGameMap {
         mobj.type = type;
 
         if (type == mobjtype_t.MT_FLARE) {
-
             mobj.info = new Flare_t();
         } else {
 
@@ -1624,6 +1623,10 @@ public class Actions extends UnifiedGameMap {
         mobj.function = think_t.P_MobjThinker;
         AddThinker(mobj);
 
+        if (type == mobjtype_t.MT_FLARE) {
+          DM.Flare.add(mobj);
+        }
+        
         return mobj;
     }
 

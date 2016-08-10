@@ -184,6 +184,7 @@ public abstract class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGa
     public event_t[] events = new event_t[MAXEVENTS];
     public int eventhead;
     public int eventtail;
+    public ArrayList<mobj_t> Flare = new ArrayList<mobj_t>();
 
     /**
      * D_PostEvent

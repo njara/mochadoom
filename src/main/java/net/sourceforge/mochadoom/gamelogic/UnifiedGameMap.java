@@ -81,6 +81,7 @@ import static net.sourceforge.mochadoom.rendering.line_t.ML_SOUNDBLOCK;
 import static net.sourceforge.mochadoom.rendering.line_t.ML_TWOSIDED;
 import static net.sourceforge.mochadoom.utils.C2JUtils.eval;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import net.sourceforge.mochadoom.automap.IAutoMap;
@@ -736,7 +737,7 @@ public abstract class UnifiedGameMap implements ThinkerList, DoomStatusAware {
 
             soundtarget = emmiter;
             R.increaseValidCount(1);
-            RecursiveSound(emmiter.subsector.sector, 0);
+            RecursiveSound(emmiter.subsector.sector, 100);
         }
 
         /**
@@ -797,6 +798,13 @@ public abstract class UnifiedGameMap implements ThinkerList, DoomStatusAware {
 
             c = 0;
             stop = (actor.lastlook - 1) & 3;
+            ArrayList<mobj_t> flare = DM.Flare;
+            if(actor.info.isZombie()){
+            for(mobj_t mo : flare){
+              actor.target = mo;
+              return true;
+            }
+            }
 
             for (; ; actor.lastlook = (actor.lastlook + 1) & 3) {
                 if (!DM.playeringame[actor.lastlook])
@@ -808,7 +816,8 @@ public abstract class UnifiedGameMap implements ThinkerList, DoomStatusAware {
                 }
 
                 player = DM.players[actor.lastlook];
-
+                
+                
                 if (player.health[0] <= 0)
                     continue; // dead
 
@@ -1837,11 +1846,12 @@ public abstract class UnifiedGameMap implements ThinkerList, DoomStatusAware {
      */
 
     protected void ExplodeMissile(mobj_t mo) {
-        if (mo.type == mobjtype_t.MT_FLARE && ((Flare_t) mo.info).getCounter() <= 10) {
+        if (mo.type == mobjtype_t.MT_FLARE && ((Flare_t) mo.info).getCounter() <= 100) {
             ((Flare_t) mo.info).addCounter();
             EN.NoiseAlert(mo);
-
             return;
+        } else if (mo.type == mobjtype_t.MT_FLARE){
+          DM.Flare.remove(0);
         }
         mo.momx = mo.momy = mo.momz = 0;
 
