@@ -308,7 +308,11 @@ public class player_t /*extends mobj_t */
     public boolean didsecret;
     
     //True if Berserk mode is active
-    public boolean berserkmode;
+    private boolean berserkmode;
+    
+    private long timeBerserkModeInit;
+    
+    private int maxTimeBerserkMode;
 
     // BJPR: poison variables
 
@@ -371,6 +375,7 @@ public class player_t /*extends mobj_t */
         gameSkill = skill;
         setMaxTired(skill);
         setWaitTired(skill);
+        setMaxTimeBerserkMode(skill);
     }
 
     /**
@@ -450,6 +455,9 @@ public class player_t /*extends mobj_t */
             case sk_nightmare:
                 maxTired = 50;
                 break;
+            case sk_horde:
+                maxTired = 50;
+                break;
         }
     }
 
@@ -491,6 +499,9 @@ public class player_t /*extends mobj_t */
                 waitTired = 7500;
                 break;
             case sk_nightmare:
+                waitTired = 10000;
+                break;
+            case sk_horde:
                 waitTired = 10000;
                 break;
         }
@@ -651,6 +662,51 @@ public class player_t /*extends mobj_t */
               }
           } */
     }
+    
+    //BerserkMode methods
+    
+    public void activateBerserkMode() {
+        this.berserkmode = true;
+        this.message = String.format("Berserk Mode On!!!!");
+        this.timeBerserkModeInit = System.currentTimeMillis();
+    }
+    
+    public boolean isBerserkMode() {
+        return this.berserkmode;
+    }
+    
+    public void isBerserkModeOver() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - timeBerserkModeInit > maxTimeBerserkMode){
+          this.berserkmode = false;
+          this.message = String.format("Berserk Mode Off");
+        }
+    }
+    
+    public void setMaxTimeBerserkMode(Skill skill) {
+      switch(skill) {
+        case sk_baby:
+            maxTimeBerserkMode = 10000;
+            break;
+        case sk_easy:
+            maxTimeBerserkMode = 9000;
+            break;
+        case sk_medium:
+            maxTimeBerserkMode = 8000;
+            break;
+        case sk_hard:
+            maxTimeBerserkMode = 7000;
+            break;
+        case sk_nightmare:
+            maxTimeBerserkMode = 6000;
+            break;
+        case sk_horde:
+            maxTimeBerserkMode = 6000;
+            break;
+      }
+    }
+    
+    
 
 
     //
@@ -896,10 +952,12 @@ public class player_t /*extends mobj_t */
      * @param frequency Damage frequency of poison.
      */
     public void poisonPlayer(int poison, int frequency) {
-        this.poisoned = true;
-        this.poisonDamage = poison;
-        this.poisonFreq = frequency;
-        this.lastPoisonDamage = System.currentTimeMillis();
+        if (!isBerserkMode()) {
+            this.poisoned = true;
+            this.poisonDamage = poison;
+            this.poisonFreq = frequency;
+            this.lastPoisonDamage = System.currentTimeMillis();
+        }       
     }
 
     /**
@@ -1550,6 +1608,10 @@ public class player_t /*extends mobj_t */
                     player.pendingweapon = newweapon;
                 }
             }
+        }
+        
+        if (this.berserkmode) {
+            isBerserkModeOver();
         }
 
         // check for use

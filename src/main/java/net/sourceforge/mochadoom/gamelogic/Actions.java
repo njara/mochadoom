@@ -2426,8 +2426,9 @@ public class Actions extends UnifiedGameMap {
                 damage = target.health - 1;
             }
             
-            if (source != null && player.berserkmode && ((mobjinfo[source.type.ordinal()]).getType()).equals("MT_ZOMBIE")) {
-              return;
+            if (source != null && player.isBerserkMode() && 
+                    ((mobjinfo[source.type.ordinal()]).getType()).equals("MT_ZOMBIE")) {
+                return;
             }
 
             // Below certain threshold,
@@ -2606,7 +2607,10 @@ public class Actions extends UnifiedGameMap {
             case MT_REDZOMBIE:
             case MT_GRAYZOMBIE:
             case MT_BLACKZOMBIE:
-                item = mobjtype_t.MT_BERSERKMEDIKIT;
+                if (isBerserkMedikitDropped())   
+                    item = mobjtype_t.MT_BERSERKMEDIKIT;
+                else
+                    return;
                 break;
 
             default:
@@ -2615,6 +2619,25 @@ public class Actions extends UnifiedGameMap {
 
         mo = SpawnMobj(target.x, target.y, ONFLOORZ, item);
         mo.flags |= MF_DROPPED;    // special versions of items
+    }
+    
+    public boolean isBerserkMedikitDropped() {
+      double dropProbability = Math.random();
+      if (DM.gameskill == Skill.sk_baby) {
+          return dropProbability < 0.5; 
+      } else if (DM.gameskill == Skill.sk_easy) {
+          return dropProbability < 0.4;
+      } else if (DM.gameskill == Skill.sk_medium) {
+          return dropProbability < 0.3;
+      } else if (DM.gameskill == Skill.sk_hard) {
+          return dropProbability < 0.2;
+      } else if (DM.gameskill == Skill.sk_nightmare) {
+          return dropProbability < 0.1;
+      } else if (DM.gameskill == Skill.sk_horde) {
+          return dropProbability < 0.1;
+      }
+      
+      return false;
     }
 
     /**
